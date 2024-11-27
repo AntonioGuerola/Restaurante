@@ -1,7 +1,9 @@
 package Model.Entity;
 
+import java.util.List;
+
 public class Mesa {
-    private static int id;
+    private int id;
     private TipoMesa tipo;
     private int numMesa;
     private String fecha;
@@ -22,21 +24,19 @@ public class Mesa {
 
     }
 
-    public static int getId() {
+    public int getId() {
         return id;
     }
 
-    public static void setId(int id) {
-        Mesa.id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public TipoMesa getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoMesa tipo) {
-        this.tipo = tipo;
-    }
+    public void setTipo(TipoMesa tipo) {this.tipo = tipo; }
 
     public int getNumMesa() {
         return numMesa;

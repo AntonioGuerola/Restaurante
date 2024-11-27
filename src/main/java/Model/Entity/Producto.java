@@ -7,12 +7,14 @@ public class Producto {
     private String nombre;
     private double precio;
     private TipoProducto tipo;
+    private String destino;
 
-    public Producto(int id, String nombre, double precio, TipoProducto tipo) {
+    public Producto(int id, String nombre, double precio, TipoProducto tipo, String destino) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.tipo = tipo;
+        this.destino = destino;
     }
 
     public Producto(){
@@ -51,6 +53,18 @@ public class Producto {
         this.tipo = tipo;
     }
 
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        if (tipo == TipoProducto.valueOf("REFRESCO") || tipo == TipoProducto.valueOf("CERVEZA") || tipo == TipoProducto.valueOf("VINO")){
+            destino = "Barra";
+        } else {
+            destino = "Cocina";
+        }
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -71,6 +85,7 @@ public class Producto {
                 ", nombre='" + nombre + '\'' +
                 ", precio=" + precio +
                 ", tipo=" + tipo +
+                ", destino?" + destino +
                 '}';
     }
 }

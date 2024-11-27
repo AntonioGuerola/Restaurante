@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class Cesta {
     private int id;
-    private LocalTime horaComanda;
+    private String horaComanda;
     private Mesa mesa;
 
-    public Cesta(int id, LocalTime horaComanda, Mesa mesa) {
+    public Cesta(int id, String horaComanda, Mesa mesa) {
         this.id = id;
         this.horaComanda = horaComanda;
         this.mesa = mesa;
@@ -26,11 +26,11 @@ public class Cesta {
         this.id = id;
     }
 
-    public LocalTime getHoraComanda() {
+    public String getHoraComanda() {
         return horaComanda;
     }
 
-    public void setHoraComanda(LocalTime horaComanda) {
+    public void setHoraComanda(String horaComanda) {
         this.horaComanda = horaComanda;
     }
 

@@ -38,7 +38,7 @@ public interface DAO<T, K> extends Closeable {
      * @param key the primary key of the entity to find
      * @return the found entity, or null if no entity was found with the given key
      */
-    T findById(K key);
+    T findById(K key) throws SQLException;
 
     /**
      * Finds all entities of the given type in the database.
