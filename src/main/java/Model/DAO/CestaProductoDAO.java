@@ -2,8 +2,6 @@ package Model.DAO;
 
 import Model.Connection.MySQLConnection;
 import Model.Entity.*;
-import Model.Entity.CestaProducto;
-import Model.Entity.Producto;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -60,7 +58,6 @@ public class CestaProductoDAO extends CestaProducto implements DAO {
                     String tipoProducto = rs.getString("tipo");
                     producto.setTipo(TipoProducto.valueOf(tipoProducto));
 
-                    producto.setDestino(rs.getString("destino"));
                     cestaProducto.setProducto(producto);
 
                     cestaProducto.setCantidad(rs.getInt("cantidad"));

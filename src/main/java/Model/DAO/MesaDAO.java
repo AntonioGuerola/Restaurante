@@ -2,6 +2,7 @@ package Model.DAO;
 
 import Model.Connection.MySQLConnection;
 import Model.Entity.Mesa;
+import Model.Entity.Producto;
 import Model.Entity.TipoMesa;
 
 import java.io.IOException;
@@ -12,22 +13,24 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MesaDAO extends Mesa implements DAO {
 
     private final static String INSERT = "INSERT INTO mesa (tipo, numMesa, fecha, horaMesa, tiempo, cuenta) VALUES (?,?,?,?,?,?)";
+    private static final String DELETE = "DELETE FROM mesa WHERE id = ?";
     private final static String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
+    private final static String FINDALL = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa";
 
+    Connection con = MySQLConnection.getConnection();
     private Connection connection;
-
     public MesaDAO(Connection connection) {
         this.connection = connection;
     }
 
     @Override
     public Object save(Object entity) throws SQLException {
-        Connection con = MySQLConnection.getConnection();
         if (con != null) {
             try (PreparedStatement ps = con.prepareStatement(INSERT)) {
                 LocalDate fechaActual = LocalDate.now();
@@ -51,8 +54,18 @@ public class MesaDAO extends Mesa implements DAO {
     }
 
     @Override
-    public Object delete(Object entity) throws SQLException {
-        return null;
+    public Object delete(Object entity) {
+        Mesa tmp = (Mesa) entity;
+        if (tmp != null) {
+            try (PreparedStatement pst = con.prepareStatement(DELETE)) {
+                pst.setInt(1, tmp.getId());
+                pst.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                tmp = null;
+            }
+        }
+        return tmp;
     }
 
     @Override
@@ -66,7 +79,7 @@ public class MesaDAO extends Mesa implements DAO {
                     if (rs.next()) {
                         Mesa mesa = new Mesa();
                         mesa.setId(rs.getInt("id"));
-                        mesa.setTipo(TipoMesa.valueOf(rs.getString("tipo"))); // Enum para tipo
+                        mesa.setTipo(TipoMesa.valueOf(rs.getString("tipo")));
                         mesa.setNumMesa(rs.getInt("numMesa"));
                         mesa.setFecha(rs.getString("fecha"));
                         mesa.setHoraMesa(rs.getString("horaMesa"));
@@ -82,7 +95,25 @@ public class MesaDAO extends Mesa implements DAO {
 
     @Override
     public List findAll() {
-        return null;
+        List<Mesa> mesas = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(FINDALL);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Mesa mesa = new Mesa();
+                mesa.setId(rs.getInt("id"));
+                mesa.setTipo(TipoMesa.valueOf(rs.getString("tipo")));
+                mesa.setNumMesa(rs.getInt("numMesa"));
+                mesa.setFecha(rs.getString("fecha"));
+                mesa.setHoraMesa(rs.getString("horaMesa"));
+                mesa.setTiempo(rs.getInt("tiempo"));
+                mesa.setCuenta(rs.getDouble("cuenta"));
+                mesas.add(mesa);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return mesas;
     }
 
     @Override

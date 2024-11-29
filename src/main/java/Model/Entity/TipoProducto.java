@@ -1,11 +1,21 @@
 package Model.Entity;
 
 public enum TipoProducto {
-    REFRESCO,
-    VINO,
-    CERVEZA,
-    CARNE,
-    PESCADO,
-    VERDURA,
-    POSTRE
+    REFRESCO("refresco"),
+    VINO("vino"),
+    CERVEZA("cerveza"),
+    CARNE("carne"),
+    PESCADO("pescado"),
+    VERDURA("verdura"),
+    POSTRE("postre");
+
+    private final String dbField;
+
+    TipoProducto(String url) {
+        this.dbField = url;
+    }
+
+    public String getUrl() {
+        return dbField;
+    }
 }
