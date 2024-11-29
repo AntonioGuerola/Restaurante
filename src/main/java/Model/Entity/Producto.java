@@ -9,12 +9,11 @@ public class Producto {
     private TipoProducto tipo;
     private String destino;
 
-    public Producto(int id, String nombre, double precio, TipoProducto tipo, String destino) {
-        this.id = id;
+    public Producto(String nombre, double precio, TipoProducto tipo) {
         this.nombre = nombre;
         this.precio = precio;
         this.tipo = tipo;
-        this.destino = destino;
+        setDestino();
     }
 
     public Producto(){
@@ -57,7 +56,7 @@ public class Producto {
         return destino;
     }
 
-    public void setDestino(String destino) {
+    private void setDestino() {
         if (tipo == TipoProducto.valueOf("REFRESCO") || tipo == TipoProducto.valueOf("CERVEZA") || tipo == TipoProducto.valueOf("VINO")){
             destino = "Barra";
         } else {

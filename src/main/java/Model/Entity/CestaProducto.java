@@ -1,6 +1,5 @@
 package Model.Entity;
 
-import Model.Entity.*;
 import java.util.Objects;
 
 public class CestaProducto {
