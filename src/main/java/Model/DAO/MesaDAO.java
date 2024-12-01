@@ -22,15 +22,25 @@ public class MesaDAO extends Mesa implements DAO {
     private static final String DELETE = "DELETE FROM mesa WHERE id = ?";
     private final static String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
     private final static String FINDALL = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa";
+    private final static String GETHORAMESA = "SELECT horaMesa FROM mesa WHERE id = ?";
+    private final static String UPDATETIEMPO = "UPDATE mesa SET tiempo = ? WHERE id = ?";
+    private final static String GETCUENTA = "SELECT SUM(p.precio) AS totalCuenta " +
+            "FROM cesta c " +
+            "JOIN cesta_producto cp ON c.id = cp.idCesta " +
+            "JOIN producto p ON cp.idProducto = p.id " +
+            "WHERE c.idMesa = ?";
+    private final static String UPDATECUENTA = "UPDATE mesa SET cuenta = ? WHERE id = ?";
 
     Connection con = MySQLConnection.getConnection();
-    private Connection connection;
-    public MesaDAO(Connection connection) {
-        this.connection = connection;
+
+    public MesaDAO() {
+        this.con = con;
     }
+
 
     @Override
     public Object save(Object entity) throws SQLException {
+        Mesa tmp = (Mesa) entity;
         if (con != null) {
             try (PreparedStatement ps = con.prepareStatement(INSERT)) {
                 LocalDate fechaActual = LocalDate.now();
@@ -39,12 +49,12 @@ public class MesaDAO extends Mesa implements DAO {
                 String fechaString = fechaActual.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 String horaString = horaActual.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-                ps.setString(1, this.getTipo().name());
-                ps.setInt(2, this.getNumMesa());
+                ps.setString(1, tmp.getTipo().name());
+                ps.setInt(2, tmp.getNumMesa());
                 ps.setString(3, fechaString);
                 ps.setString(4, horaString);
-                ps.setInt(5, this.getTiempo());
-                ps.setDouble(6, this.getCuenta());
+                ps.setInt(5, tmp.getTiempo());
+                ps.setDouble(6, tmp.getCuenta());
 
                 return ps.executeUpdate() > 0;
             }
@@ -96,7 +106,7 @@ public class MesaDAO extends Mesa implements DAO {
     @Override
     public List findAll() {
         List<Mesa> mesas = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(FINDALL);
+        try (PreparedStatement ps = con.prepareStatement(FINDALL);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -120,4 +130,48 @@ public class MesaDAO extends Mesa implements DAO {
     public void close() throws IOException {
 
     }
+
+    public void actualizarTiempo(int idMesa) throws SQLException {
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(GETHORAMESA)) {
+                ps.setInt(1, idMesa);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String horaMesaStr = rs.getString("horaMesa");
+                        LocalTime horaMesa = LocalTime.parse(horaMesaStr, DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+                        LocalTime horaActual = LocalTime.now();
+                        long minutos = java.time.Duration.between(horaMesa, horaActual).toMinutes();
+
+                        try (PreparedStatement psUpdate = con.prepareStatement(UPDATETIEMPO)) {
+                            psUpdate.setInt(1, (int) minutos);
+                            psUpdate.setInt(2, idMesa);
+                            psUpdate.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void actualizarCuenta(int idMesa) throws SQLException {
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(GETCUENTA)) {
+                ps.setInt(1, idMesa);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        double totalCuenta = rs.getDouble("totalCuenta");
+
+                        try (PreparedStatement psUpdate = con.prepareStatement(UPDATECUENTA)) {
+                            psUpdate.setDouble(1, totalCuenta);
+                            psUpdate.setInt(2, idMesa);
+                            psUpdate.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }
