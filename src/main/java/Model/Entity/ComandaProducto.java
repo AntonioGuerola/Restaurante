@@ -2,27 +2,27 @@ package Model.Entity;
 
 import java.util.Objects;
 
-public class CestaProducto {
-    private Cesta cesta;
+public class ComandaProducto {
+    private Comanda comanda;
     private Producto producto;
     private int cantidad;
 
-    public CestaProducto(Cesta cesta, Producto producto, int cantidad) {
-        this.cesta = cesta;
+    public ComandaProducto(Comanda comanda, Producto producto, int cantidad) {
+        this.comanda = comanda;
         this.producto = producto;
         this.cantidad = cantidad;
     }
 
-    public CestaProducto() {
+    public ComandaProducto() {
         cantidad = 0;
     }
 
-    public Cesta getCesta() {
-        return cesta;
+    public Comanda getCesta() {
+        return comanda;
     }
 
-    public void setCesta(Cesta cesta) {
-        this.cesta = cesta;
+    public void setCesta(Comanda comanda) {
+        this.comanda = comanda;
     }
 
     public Producto getProducto() {
@@ -45,19 +45,19 @@ public class CestaProducto {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        CestaProducto that = (CestaProducto) object;
-        return Objects.equals(cesta, that.cesta);
+        ComandaProducto that = (ComandaProducto) object;
+        return Objects.equals(comanda, that.comanda);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cesta);
+        return Objects.hash(comanda);
     }
 
     @Override
     public String toString() {
-        return "CestaProducto{" +
-                "cesta=" + cesta +
+        return "ComandaProducto{" +
+                "comanda=" + comanda +
                 ", producto=" + producto +
                 ", cantidad=" + cantidad +
                 '}';

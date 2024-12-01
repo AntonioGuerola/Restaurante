@@ -13,42 +13,40 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CestaProductoDAO extends CestaProducto implements DAO {
-    private static final String OBTENERPPRODUCTOSCESTA = "SELECT cp.idCesta, cp.idProducto, cp.cantidad, p.id, p.nombre, p.precio, p.tipo, p.destino, c.id, c.horaComanda, c.mesa " +
+public class ComandaProductoDAO extends ComandaProducto implements DAO {
+    private static final String INSERT = "INSERT INTO cestaProducto (IdCesta, IdProducto, cantidad) VALUES (?,?,?)";
+    private static final String OBTENERPPRODUCTOSCESTA = "SELECT cp.idCesta, cp.idProducto, cp.cantidad, p.id, p.nombre, p.precio, p.tipoProducto, p.destino, c.id, c.horaComanda, c.idMesa " +
             "FROM CestaProducto cp " +
             "JOIN Producto p ON cp.idProducto = p.id " +
             "JOIN Cesta c ON cp.idCesta = c.id " +
             "WHERE cp.idCesta = ?";
 
-    private Connection connection;
-
-
-    public CestaProductoDAO(Connection connection) {
-        this.connection = connection;
+    Connection con = MySQLConnection.getConnection();
+    public ComandaProductoDAO() {
+        this.con = con;
     }
 
-    public List<CestaProducto> obtenerProductosDeCesta(int idCesta) throws SQLException {
-        List<CestaProducto> cestaProductos = new ArrayList<>();
-        MesaDAO mesaDAO = new MesaDAO(MySQLConnection.getConnection());
+    public List<ComandaProducto> obtenerProductosDeCesta(int idCesta) throws SQLException {
+        List<ComandaProducto> comandaProductos = new ArrayList<>();
+        MesaDAO mesaDAO = new MesaDAO();
 
-        try (PreparedStatement statement = connection.prepareStatement(OBTENERPPRODUCTOSCESTA)) {
+        try (PreparedStatement statement = con.prepareStatement(OBTENERPPRODUCTOSCESTA)) {
             statement.setInt(1, idCesta);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    CestaProducto cestaProducto = new CestaProducto();
+                    ComandaProducto comandaProducto = new ComandaProducto();
 
                     LocalTime horaActualComanda = LocalTime.now();
                     String horaString = horaActualComanda.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-                    // Crear el objeto Cesta
-                    Cesta cesta = new Cesta();
-                    cesta.setId(rs.getInt("idCesta"));
-                    cesta.setHoraComanda(horaString);
+                    Comanda comanda = new Comanda();
+                    comanda.setId(rs.getInt("idCesta"));
+                    comanda.setHoraComanda(horaString);
 
                     int idMesa = rs.getInt("idMesa");
                     Mesa mesa = mesaDAO.findById(idMesa);
-                    cesta.setMesa(mesa);
-                    cestaProducto.setCesta(cesta);
+                    comanda.setMesa(mesa);
+                    comandaProducto.setCesta(comanda);
 
                     Producto producto = new Producto();
                     producto.setId(rs.getInt("idProducto"));
@@ -58,21 +56,32 @@ public class CestaProductoDAO extends CestaProducto implements DAO {
                     String tipoProducto = rs.getString("tipo");
                     producto.setTipo(TipoProducto.valueOf(tipoProducto));
 
-                    cestaProducto.setProducto(producto);
+                    comandaProducto.setProducto(producto);
 
-                    cestaProducto.setCantidad(rs.getInt("cantidad"));
+                    comandaProducto.setCantidad(rs.getInt("cantidad"));
 
-                    cestaProductos.add(cestaProducto);
+                    comandaProductos.add(comandaProducto);
                 }
             }
         }
 
-        return cestaProductos;
+        return comandaProductos;
     }
 
     @Override
     public Object save(Object entity) throws SQLException {
-        return null;
+        ComandaProducto tmp = (ComandaProducto) entity;
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(INSERT)) {
+                ps.setInt(1, tmp.getCesta().getId());
+                ps.setInt(2, tmp.getProducto().getId());
+                ps.setInt(3, tmp.getCantidad());
+
+                return ps.executeUpdate() > 0;
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
