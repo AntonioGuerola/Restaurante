@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.View.CuantasTerrazasCafeteriasController">
+<center>
+    <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+        <children>
+            <Label text="Indica cuantas mesas habrá en la terraza y cuantas en la cafetería." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            </Label>
+            <Label text="Terraza" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            </Label>
+            <TextField fx:id="terrazaText" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            </TextField>
+            <Label text="Cafetería" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            </Label>
+            <TextField fx:id="cafeteriaText" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            </TextField>
+            <Button mnemonicParsing="false" onAction="#generarMesas" text="Generar mesas" />
+            <Button mnemonicParsing="false" onAction="#goBack" text="Cerrar" />
+        </children>
+    </VBox>
+</center>
+</BorderPane>
