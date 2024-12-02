@@ -15,12 +15,12 @@ public class ProductoDAO implements DAO<Producto, Integer> {
     private static final String DELETE = "DELETE FROM producto WHERE id = ?";
     private static final String FINDBYID = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE id = ?";
     private static final String FINDALL = "SELECT id, nombre, precio, tipoProducto, destino FROM producto";
-    private static final String UPDATE = "UPDATE producto SET nombre = ?, precio = ?, tipoProducto = ?, destino = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE producto SET nombre = ?, precio = ?, tipoProducto = ? WHERE id = ?";
 
     private Connection con = MySQLConnection.getConnection();
 
     public ProductoDAO() {
-        this.con = con;
+        this.con = MySQLConnection.getConnection();
     }
 
     @Override
@@ -50,7 +50,6 @@ public class ProductoDAO implements DAO<Producto, Integer> {
                     ps.setString(1, producto.getNombre());
                     ps.setDouble(2, producto.getPrecio());
                     ps.setString(3, producto.getTipo().name());
-                    ps.setString(4, producto.getDestino());
                     ps.setInt(4, producto.getId());
 
                     ps.executeUpdate();
@@ -105,13 +104,7 @@ public class ProductoDAO implements DAO<Producto, Integer> {
 
     @Override
     public void close() throws IOException {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
     private Producto mapResultSetToProducto(ResultSet rs) throws SQLException {
@@ -122,4 +115,9 @@ public class ProductoDAO implements DAO<Producto, Integer> {
         producto.setTipo(TipoProducto.valueOf(rs.getString("tipoProducto")));
         return producto;
     }
+
+    public static ProductoDAO build() {
+        return new ProductoDAO();
+    }
+
 }

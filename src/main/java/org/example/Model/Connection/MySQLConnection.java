@@ -19,6 +19,7 @@ public class MySQLConnection {
                 e.printStackTrace();
             }
         }
+        System.out.println("Conexión establecida");
         return con;
     }
 

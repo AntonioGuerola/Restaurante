@@ -137,12 +137,6 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
 
     @Override
     public void close() {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+
     }
 }

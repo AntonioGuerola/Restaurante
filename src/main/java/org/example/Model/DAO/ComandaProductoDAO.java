@@ -91,12 +91,6 @@ public class ComandaProductoDAO implements DAO<ComandaProducto, Integer> {
 
     @Override
     public void close() throws IOException {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 }
