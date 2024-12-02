@@ -6,6 +6,11 @@ package org.example.View;
 public enum Scenes {
     ROOT("View/layout.fxml"),
     START("View/start.fxml"),
+    INICIO("View/inicio.fxml"),
+    AJUSTES("View/ajustes.fxml"),
+    INSERTPRODUCTO("View/insertProducto.fxml"),
+    DELETEPRODUCTO("View/deleteProducto.fxml"),
+    UPDATEPRODUCTO("View/updateProducto.fxml"),
     SIGNIN("view/SignIn.fxml"),
     CUANTASTERRAZASCAFETERIAS  ("view/CuantasTerrazasCafeterias.fxml"),
     CLIENTHOME("view/ClientHome.fxml"),

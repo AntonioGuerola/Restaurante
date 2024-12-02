@@ -8,10 +8,10 @@
     <center>
         <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <Button mnemonicParsing="false" onAction="#toSignIn" text="Comenzar" />
-                <Button mnemonicParsing="false" onAction="#toCuantasTerrazasCafeterias" prefHeight="26.0" prefWidth="76.0" text="Generar mesas" />
-                <Button mnemonicParsing="false" onAction="#toSignIn" text="Registro" />
-                <Button mnemonicParsing="false" onAction="#toSignIn" text="Ajustes" />
+                <Button mnemonicParsing="false" onAction="#toInicio" text="Comenzar" />
+                <Button mnemonicParsing="false" onAction="#toCuantasTerrazasCafeterias" text="Generar mesas" />
+                <Button mnemonicParsing="false" text="Registro" />
+                <Button mnemonicParsing="false" onAction="#toAjustes" text="Ajustes" />
                 <Button mnemonicParsing="false" onAction="#close" text="Cerrar" />
             </children>
         </VBox>

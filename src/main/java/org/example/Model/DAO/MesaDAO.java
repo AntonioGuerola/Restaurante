@@ -82,13 +82,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
 
     @Override
     public void close() throws IOException {
-        try {
-            if (con != null && !con.isClosed()) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            throw new IOException("Error closing connection", e);
-        }
+
     }
 
     private Mesa mapResultSetToMesa(ResultSet rs) throws SQLException {
