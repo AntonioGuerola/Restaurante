@@ -11,6 +11,8 @@ public enum Scenes {
     INSERTPRODUCTO("View/insertProducto.fxml"),
     DELETEPRODUCTO("View/deleteProducto.fxml"),
     UPDATEPRODUCTO("View/updateProducto.fxml"),
+    MESASTERRAZA("View/mesasTerraza.fxml"),
+    MESASCAFETERIA("View/mesasCafeteria.fxml"),
     SIGNIN("view/SignIn.fxml"),
     CUANTASTERRAZASCAFETERIAS  ("view/CuantasTerrazasCafeterias.fxml"),
     CLIENTHOME("view/ClientHome.fxml"),

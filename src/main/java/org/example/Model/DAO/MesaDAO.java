@@ -17,6 +17,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     private static final String DELETE = "DELETE FROM mesa WHERE id = ?";
     private static final String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
     private static final String FINDALL = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa";
+    private static final String CANTIDADTERRAZA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'TERRAZA'";
 
     private final Connection con;
 
@@ -94,5 +95,16 @@ public class MesaDAO implements DAO<Mesa, Integer> {
         mesa.setHoraMesa(rs.getTime("horaMesa").toString());
         mesa.setTiempo(rs.getInt("tiempo"));
         return mesa;
+    }
+
+    public int contarMesasTerraza() throws SQLException {
+        int count = 0;
+        try (PreparedStatement ps = con.prepareStatement(CANTIDADTERRAZA);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);  // Obtenemos el número de mesas de tipo 'Terraza'
+            }
+        }
+        return count;
     }
 }
