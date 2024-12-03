@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.MesaDAO;
 import org.example.Model.Entity.Mesa;
+import org.example.Model.Entity.TipoMesa;
 import org.example.Model.Singleton.MesaSingleton;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class MesasTerrazaController extends Controller implements Initializable 
             // Generamos los botones dinámicamente según el número de mesas "Terraza"
             for (int i = 1; i <= cantidadMesasTerraza; i++) {
                 // Creamos un nuevo botón para cada mesa
-                Button button = new Button("Mesa " + i);  // El nombre del botón es "Mesa X"
+                Button button = new Button("Terra " + i);  // El nombre del botón es "Mesa X"
 
                 // Estilo adicional para los botones (opcional, para hacerlo más vistoso)
                 button.setStyle("-fx-font-size: 16px; -fx-padding: 10px 20px;");
@@ -68,17 +69,19 @@ public class MesasTerrazaController extends Controller implements Initializable 
         }
     }
 
-    private void handleMesaSelection(int mesaId) throws IOException {
-        // Crea una instancia de Mesa con el ID de la mesa seleccionada
-        Mesa selectedMesa = new Mesa();
-        selectedMesa.setId(mesaId);
+    private void handleMesaSelection(int numMesa) throws IOException {
+        try {
+            // Carga la mesa completa desde la base de datos
+            Mesa selectedMesa = mesaDAO.findByNumMesa(numMesa, TipoMesa.TERRAZA.name());
 
-        // Configura el singleton con la mesa seleccionada
-        MesaSingleton.getInstance(selectedMesa);
+            // Configura el singleton con la mesa seleccionada
+            MesaSingleton.getInstance(selectedMesa);
 
-        // Cambia a la siguiente escena
-        App.currentController.changeScene(Scenes.CATEGORIAPRODUCTOS, null);  // Ajusta el nombre de la escena
-    }
+            // Cambia a la siguiente escena
+            App.currentController.changeScene(Scenes.CATEGORIAPRODUCTOS, null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }}
 
     @FXML
     private void goBack() throws IOException {
