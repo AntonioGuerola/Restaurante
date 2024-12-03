@@ -1,6 +1,5 @@
 package org.example.Model.Singleton;
 
-
 import org.example.Model.Entity.Mesa;
 
 public class MesaSingleton {
@@ -15,10 +14,11 @@ public class MesaSingleton {
         return _instance;
     }
 
-    public static void getInstance(Mesa mesaToUse) {
+    public static MesaSingleton getInstance(Mesa mesaToUse) {
         if (mesaToUse != null) {
             _instance = new MesaSingleton(mesaToUse);
         }
+        return _instance;
     }
 
     public static void closeSession() {
@@ -29,4 +29,3 @@ public class MesaSingleton {
         return currentMesa;
     }
 }
-

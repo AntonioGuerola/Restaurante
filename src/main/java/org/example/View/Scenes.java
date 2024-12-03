@@ -13,6 +13,7 @@ public enum Scenes {
     UPDATEPRODUCTO("View/updateProducto.fxml"),
     MESASTERRAZA("View/mesasTerraza.fxml"),
     MESASCAFETERIA("View/mesasCafeteria.fxml"),
+    CATEGORIAPRODUCTOS("View/categoriasProductos.fxml"),
     SIGNIN("view/SignIn.fxml"),
     CUANTASTERRAZASCAFETERIAS  ("view/CuantasTerrazasCafeterias.fxml"),
     CLIENTHOME("view/ClientHome.fxml"),

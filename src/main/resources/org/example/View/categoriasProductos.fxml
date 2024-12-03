@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.View.CategoriaProductosController">
+
+    <!-- Botón "Volver" en la parte superior izquierda -->
+    <Button fx:id="btnBack" text="Volver" onAction="#goBack" style="-fx-font-size: 14px; -fx-padding: 8px;"
+            AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"/>
+
+    <!-- VBox para alinear los botones verticalmente en el centro -->
+    <VBox spacing="15" alignment="CENTER" AnchorPane.topAnchor="100.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+        <!-- Botones para las categorías con el mismo estilo -->
+        <Button text="REFRESCOS" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="CERVEZA" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="VINO" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="CARNE" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="PESCADO" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="VERDURA" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="POSTRE" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+    </VBox>
+</AnchorPane>

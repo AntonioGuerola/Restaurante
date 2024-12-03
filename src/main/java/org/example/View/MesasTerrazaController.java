@@ -6,10 +6,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.MesaDAO;
+import org.example.Model.Entity.Mesa;
+import org.example.Model.Singleton.MesaSingleton;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class MesasTerrazaController extends Controller implements Initializable {
@@ -43,11 +45,17 @@ public class MesasTerrazaController extends Controller implements Initializable 
                 // Creamos un nuevo botón para cada mesa
                 Button button = new Button("Mesa " + i);  // El nombre del botón es "Mesa X"
 
+                // Estilo adicional para los botones (opcional, para hacerlo más vistoso)
+                button.setStyle("-fx-font-size: 16px; -fx-padding: 10px 20px;");
+
                 // Definimos la acción cuando se presiona el botón
-                int finalI = i;
+                int finalI = i;  // Para usar en la lambda
                 button.setOnAction(event -> {
-                    // Aquí puedes agregar la lógica para lo que ocurre cuando se selecciona una mesa
-                    System.out.println("Has seleccionado la mesa de tipo Terraza número " + finalI);
+                    try {
+                        handleMesaSelection(finalI);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 });
 
                 // Añadimos el botón al VBox
@@ -60,18 +68,20 @@ public class MesasTerrazaController extends Controller implements Initializable 
         }
     }
 
-    @FXML
-    private void goMesasTerrazas() throws IOException {
-        App.currentController.changeScene(Scenes.MESASTERRAZA, null);
-    }
+    private void handleMesaSelection(int mesaId) throws IOException {
+        // Crea una instancia de Mesa con el ID de la mesa seleccionada
+        Mesa selectedMesa = new Mesa();
+        selectedMesa.setId(mesaId);
 
-    @FXML
-    private void goMesasCafeterias() throws IOException {
-        App.currentController.changeScene(Scenes.MESASCAFETERIA, null);
+        // Configura el singleton con la mesa seleccionada
+        MesaSingleton.getInstance(selectedMesa);
+
+        // Cambia a la siguiente escena
+        App.currentController.changeScene(Scenes.CATEGORIAPRODUCTOS, null);  // Ajusta el nombre de la escena
     }
 
     @FXML
     private void goBack() throws IOException {
-        App.currentController.changeScene(Scenes.START, null);
+        App.currentController.changeScene(Scenes.INICIO, null);
     }
 }
