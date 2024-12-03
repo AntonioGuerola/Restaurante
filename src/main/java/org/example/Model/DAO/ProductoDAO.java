@@ -15,7 +15,15 @@ public class ProductoDAO implements DAO<Producto, Integer> {
     private static final String DELETE = "DELETE FROM producto WHERE id = ?";
     private static final String FINDBYID = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE id = ?";
     private static final String FINDALL = "SELECT id, nombre, precio, tipoProducto, destino FROM producto";
+    private static final String FINDALLREFRESCOS = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'REFRESCO'";
+    private static final String FINDALLCERVEZA = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'CERVEZA'";
+    private static final String FINDALLVINO = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'VINO'";
+    private static final String FINDALLCARNE = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'CARNE'";
+    private static final String FINDALLPESCADO = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'PESCADO'";
+    private static final String FINDALLVERDURA = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'VERDURA'";
+    private static final String FINDALLPOSTRE = "SELECT id, nombre, precio, tipoProducto, destino FROM producto WHERE tipoProducto = 'POSTRE'";
     private static final String UPDATE = "UPDATE producto SET nombre = ?, precio = ?, tipoProducto = ? WHERE id = ?";
+    private static final String CANTIDADREFRESCOS = "SELECT COUNT(*) FROM producto WHERE tipoProducto = 'REFRESCO'";
 
     private Connection con = MySQLConnection.getConnection();
 
@@ -114,6 +122,129 @@ public class ProductoDAO implements DAO<Producto, Integer> {
         producto.setPrecio(rs.getDouble("precio"));
         producto.setTipo(TipoProducto.valueOf(rs.getString("tipoProducto")));
         return producto;
+    }
+
+    public int contarRefrescos() throws SQLException {
+        int count = 0;
+        try (PreparedStatement ps = con.prepareStatement(CANTIDADREFRESCOS);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        }
+        return count;
+    }
+
+    public List<Producto> findAllRefrescos() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLREFRESCOS);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
+    }
+
+    public List<Producto> findAllCerveza() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLCERVEZA);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
+    }
+
+    public List<Producto> findAllVino() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLVINO);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
+    }
+
+    public List<Producto> findAllCarne() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLCARNE);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
+    }
+
+    public List<Producto> findAllPescado() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLPESCADO);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
+    }
+
+    public List<Producto> findAllVerdura() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLVERDURA);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
+    }
+
+    public List<Producto> findAllPostre() {
+        List<Producto> productos = new ArrayList<>();
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDALLPOSTRE);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return productos;
     }
 
     public static ProductoDAO build() {

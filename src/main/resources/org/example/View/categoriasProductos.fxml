@@ -15,12 +15,12 @@
     <!-- VBox para alinear los botones verticalmente en el centro -->
     <VBox spacing="15" alignment="CENTER" AnchorPane.topAnchor="100.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
         <!-- Botones para las categorías con el mismo estilo -->
-        <Button text="REFRESCOS" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="CERVEZA" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="VINO" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="CARNE" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="PESCADO" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="VERDURA" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="POSTRE" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="REFRESCOS" onAction="#goToRefrescos" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="CERVEZA" onAction="#goToCerveza" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="VINO" onAction="#goToVino" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="CARNE" onAction="#goToCarne" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="PESCADO" onAction="#goToPescado" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="VERDURA" onAction="#goToVerdura" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <Button text="POSTRE" onAction="#goToPostre" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
     </VBox>
 </AnchorPane>

@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.example.App;
 import org.example.Model.DAO.MesaDAO;
+import org.example.Model.Singleton.MesaSingleton;
 import org.example.Model.Utils.JavaFXUtils;
 
 public class StartController extends Controller implements Initializable {
@@ -28,14 +29,14 @@ public class StartController extends Controller implements Initializable {
 
     @FXML
     private void toInicio() throws IOException {
-        try (MesaDAO mesaDAO = new MesaDAO()) {
+        MesaDAO mesaDAO = new MesaDAO();
             if (mesaDAO.findAll().isEmpty()) {
                 JavaFXUtils.showErrorAlert("ERROR", "Debes de generar las mesas primero.");
             } else {
                 App.currentController.changeScene(Scenes.INICIO, null);
             }
         }
-    }
+
 
     @FXML
     private void toCuantasTerrazasCafeterias() throws IOException {
@@ -55,6 +56,7 @@ public class StartController extends Controller implements Initializable {
 
     @FXML
     private void close() throws IOException {
+        MesaSingleton.closeSession();
         System.exit(0);
     }
 }

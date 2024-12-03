@@ -14,20 +14,14 @@ public enum Scenes {
     MESASTERRAZA("View/mesasTerraza.fxml"),
     MESASCAFETERIA("View/mesasCafeteria.fxml"),
     CATEGORIAPRODUCTOS("View/categoriasProductos.fxml"),
-    SIGNIN("view/SignIn.fxml"),
-    CUANTASTERRAZASCAFETERIAS  ("view/CuantasTerrazasCafeterias.fxml"),
-    CLIENTHOME("view/ClientHome.fxml"),
-    MODELERHOME("view/ModelerHome.fxml"),
-    MYMODELS("view/MyModels.fxml"),
-    INSERTMODEL("view/InsertModel.fxml"),
-    MODELMODAL("view/ModeLModal.fxml"),
-    MODELMODALBASKET("view/ModeLModalBasket.fxml"),
-    MODELMODALMYMODELS("view/ModeLModalMyModels.fxml"),
-    MODELSETTINGS("view/ModelSettings.fxml"),
-    SEARCHMODELSCLIENT("view/SearchModelsClient.fxml"),
-    SEARCHMODELSMODELER("view/SearchModelsModeler.fxml"),
-    USERSETTINGS("view/UserSettings.fxml"),
-    BASKET("view/Basket.fxml");;
+    REFRESCOS("View/refrescos.fxml"),
+    CUANTASTERRAZASCAFETERIAS  ("View/CuantasTerrazasCafeterias.fxml"),
+    CERVEZA("View/cerveza.fxml"),
+    VINO("View/vino.fxml"),
+    CARNE("View/carne.fxml"),
+    PESCADO("View/pescado.fxml"),
+    VERDURA("View/verdura.fxml"),
+    POSTRE("View/postre.fxml");
 
     private String url;
 

@@ -16,6 +16,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     private static final String INSERT = "INSERT INTO mesa (tipo, numMesa, fecha, horaMesa, tiempo, cuenta) VALUES (?,?,?,?,?,?)";
     private static final String DELETE = "DELETE FROM mesa WHERE id = ?";
     private static final String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
+    private static final String FINDBYNUMMESA = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE numMesa = ? AND tipo LIKE ?";
     private static final String FINDALL = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa";
     private static final String CANTIDADTERRAZA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'TERRAZA'";
     private static final String CANTIDADCAFETERIA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'CAFETERIA'";
@@ -79,6 +80,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(mesas);
         return mesas;
     }
 
@@ -103,7 +105,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
         try (PreparedStatement ps = con.prepareStatement(CANTIDADTERRAZA);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                count = rs.getInt(1);  // Obtenemos el número de mesas de tipo 'Terraza'
+                count = rs.getInt(1);
             }
         }
         return count;
@@ -114,9 +116,22 @@ public class MesaDAO implements DAO<Mesa, Integer> {
         try (PreparedStatement ps = con.prepareStatement(CANTIDADCAFETERIA);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                count = rs.getInt(1);  // Obtenemos el número de mesas de tipo 'Terraza'
+                count = rs.getInt(1);
             }
         }
         return count;
+    }
+
+    public Mesa findByNumMesa(Integer key, String tipo) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(FINDBYNUMMESA)) {
+            ps.setInt(1, key);
+            ps.setString(2, tipo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToMesa(rs);
+                }
+            }
+        }
+        return null;
     }
 }
