@@ -18,6 +18,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     private static final String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
     private static final String FINDALL = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa";
     private static final String CANTIDADTERRAZA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'TERRAZA'";
+    private static final String CANTIDADCAFETERIA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'CAFETERIA'";
 
     private final Connection con;
 
@@ -100,6 +101,17 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     public int contarMesasTerraza() throws SQLException {
         int count = 0;
         try (PreparedStatement ps = con.prepareStatement(CANTIDADTERRAZA);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);  // Obtenemos el número de mesas de tipo 'Terraza'
+            }
+        }
+        return count;
+    }
+
+    public int contarMesasCafeteria() throws SQLException {
+        int count = 0;
+        try (PreparedStatement ps = con.prepareStatement(CANTIDADCAFETERIA);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 count = rs.getInt(1);  // Obtenemos el número de mesas de tipo 'Terraza'
