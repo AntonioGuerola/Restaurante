@@ -8,9 +8,13 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.ComandaDAO;
+import org.example.Model.DAO.ComandaProductoDAO;
 import org.example.Model.DAO.ProductoDAO;
+import org.example.Model.Entity.Comanda;
+import org.example.Model.Entity.ComandaProducto;
 import org.example.Model.Entity.Mesa;
 import org.example.Model.Entity.Producto;
+import org.example.Model.Singleton.ComandaSingleton;
 import org.example.Model.Singleton.MesaSingleton;
 
 import java.io.IOException;
@@ -43,14 +47,10 @@ public class CervezaController extends Controller implements Initializable {
     @FXML
     private TilePane tilePane;
 
-    Mesa mesaSeleccionada = MesaSingleton.getInstance().getCurrentMesa();
-    private final ProductoDAO cervezaDAO;
-
+    private Mesa mesaSeleccionada = MesaSingleton.getInstance().getCurrentMesa();
+    private final ProductoDAO cervezaDAO = new ProductoDAO();
     private final ComandaDAO comandaDAO = new ComandaDAO();
-
-    public CervezaController() {
-        this.cervezaDAO = new ProductoDAO();
-    }
+    private Comanda comandaActual = null;
 
     @Override
     public void onOpen(Object input) throws IOException {
@@ -71,8 +71,7 @@ public class CervezaController extends Controller implements Initializable {
             horaMesaLabel.setText("Hora: " + (mesaSeleccionada.getHoraMesa() != null ? mesaSeleccionada.getHoraMesa() : "N/A"));
 
             try {
-                int mesaId = MesaSingleton.getInstance().getCurrentMesa().getId();
-
+                int mesaId = mesaSeleccionada.getId();
                 // Obtener la hora de la primera comanda
                 LocalTime horaPrimeraComanda = comandaDAO.obtenerHoraPrimeraComanda(mesaId);
 
@@ -94,24 +93,52 @@ public class CervezaController extends Controller implements Initializable {
             cuentaLabel.setText("Cuenta: $" + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00"));
         }
 
-        List<Producto> productos = cervezaDAO.findAllCerveza();
+        try {
+            // Buscar una comanda abierta para la mesa actual.
+            comandaActual = comandaDAO.findComandaAbiertaPorMesa(mesaSeleccionada.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        List<Producto> productos = cervezaDAO.findAllCerveza();
         for (Producto producto : productos) {
             Button button = new Button(producto.getNombre());
-
             button.setStyle("-fx-font-size: 16px; -fx-padding: 10px 20px;");
-
-            button.setOnAction(event -> {
-                System.out.println("Producto seleccionado: " + producto.getNombre());
-            });
-
+            button.setOnAction(event -> agregarProductoAComanda(producto));
             tilePane.getChildren().add(button);
         }
 
     }
 
+    private void agregarProductoAComanda(Producto producto) {
+        try {
+            if (comandaActual == null) {
+                // Crear una nueva comanda si no existe una abierta.
+                comandaActual = new Comanda(LocalTime.now().toString(), mesaSeleccionada);
+                comandaActual = comandaDAO.save(comandaActual);
+            }
+
+            // Agregar producto a la comanda.
+            comandaActual.agregarProducto(producto, 1);
+
+            // Guardar producto en la base de datos.
+            ComandaProductoDAO comandaProductoDAO = new ComandaProductoDAO();
+            comandaProductoDAO.save(new ComandaProducto(comandaActual, producto, 1));
+
+            System.out.println("Producto agregado: " + producto.getNombre());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void goBack() throws IOException {
+        if (comandaActual != null) {
+            // Guardar comanda en el singleton solo si se creó o utilizó una comanda.
+            ComandaSingleton.getInstance(comandaActual);
+        } else {
+            ComandaSingleton.closeSession();
+        }
         App.currentController.changeScene(Scenes.CATEGORIAPRODUCTOS, null);
     }
 }
