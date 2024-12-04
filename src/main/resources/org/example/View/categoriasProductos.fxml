@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
             prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.View.CategoriaProductosController">
 
-    <!-- Botón "Volver" en la parte superior izquierda -->
-    <Button fx:id="btnBack" text="Volver" onAction="#goBack" style="-fx-font-size: 14px; -fx-padding: 8px;"
-            AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"/>
+    <!-- Zona de información de la mesa -->
+    <VBox fx:id="infoMesaVBox" spacing="10" style="-fx-padding: 15px; -fx-background-color: #f4f4f4;"
+          prefWidth="225.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <Label text="Información de la Mesa" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <Label fx:id="tipoMesaLabel" text="Tipo: " style="-fx-font-size: 14px;"/>
+        <Label fx:id="numMesaLabel" text="Número: " style="-fx-font-size: 14px;"/>
+        <Label fx:id="fechaLabel" text="Fecha: " style="-fx-font-size: 14px;"/>
+        <Label fx:id="horaMesaLabel" text="Hora: " style="-fx-font-size: 14px;"/>
+        <Label fx:id="tiempoLabel" text="Tiempo: " style="-fx-font-size: 14px;"/>
+        <Label fx:id="cuentaLabel" text="Cuenta: " style="-fx-font-size: 14px;"/>
+        <Button fx:id="btnBack" text="Volver" onAction="#goBack" style="-fx-font-size: 14px; -fx-padding: 8px;"/>
 
-    <!-- VBox para alinear los botones verticalmente en el centro -->
-    <VBox spacing="15" alignment="CENTER" AnchorPane.topAnchor="100.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
-        <!-- Botones para las categorías con el mismo estilo -->
-        <Button text="REFRESCOS" onAction="#goToRefrescos" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="CERVEZA" onAction="#goToCerveza" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="VINO" onAction="#goToVino" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="CARNE" onAction="#goToCarne" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="PESCADO" onAction="#goToPescado" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="VERDURA" onAction="#goToVerdura" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
-        <Button text="POSTRE" onAction="#goToPostre" style="--fx-font-size: 16px; -fx-padding: 10px 20px; -fx-min-width: 100px;"/>
+        <!-- Espaciador flexible para empujar el botón hacia abajo -->
+        <VBox style="-fx-pref-height: 100%;"/>
+
+        <!-- Botón para enviar comanda -->
+        <Button fx:id="btnEnviarComanda" text="Enviar Comanda" onAction="#enviarComanda"
+                style="-fx-font-size: 14px; -fx-padding: 8px;" />
     </VBox>
+
+    <!-- Zona principal con el ScrollPane -->
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background-color: transparent;"
+                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="0.0">
+        <TilePane fx:id="tilePane" hgap="15" vgap="15" style="-fx-padding: 15px;" prefColumns="4">
+            <!-- Botones generados dinámicamente -->
+        </TilePane>
+    </ScrollPane>
+
 </AnchorPane>

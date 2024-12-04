@@ -6,6 +6,7 @@ import org.example.Model.Entity.Mesa;
 import org.example.Model.Entity.Producto;
 
 import java.sql.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,8 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
     private static final String FINDBYID = "SELECT id, horaComanda, idMesa FROM comanda WHERE id = ?";
     private static final String FINDALL = "SELECT id, horaComanda, idMesa FROM comanda";
     private static final String INSERTPRODUCTOCOMANDA = "INSERT INTO comanda_producto (idComanda, idProducto, cantidad) VALUES (?, ?, ?)";
-
+    private static final String SELECTPRIMERACOMANDA = "SELECT horaComanda FROM comanda WHERE idMesa = ? ORDER BY horaComanda ASC LIMIT 1";
+    private static final String FINDCOMANDAABIERTA = "SELECT * FROM comanda WHERE idMesa = ? AND estado = 'ABIERTA'";
     private Connection con;
 
     public ComandaDAO() {
@@ -71,28 +73,7 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
                 ps.setInt(1, id);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        Comanda comanda = new Comanda();
-                        comanda.setId(rs.getInt("id"));
-                        comanda.setHoraComanda(rs.getString("horaComanda"));
-
-                        MesaDAO mesaDAO = new MesaDAO();
-                        Mesa mesa = mesaDAO.findById(rs.getInt("idMesa"));
-                        comanda.setMesa(mesa);
-
-                        List<Comanda.ProductoCantidad> productos = new ArrayList<>();
-                        try (PreparedStatement psProducto = con.prepareStatement("SELECT idProducto, cantidad FROM comanda_producto WHERE idComanda = ?")) {
-                            psProducto.setInt(1, comanda.getId());
-                            try (ResultSet rsProducto = psProducto.executeQuery()) {
-                                while (rsProducto.next()) {
-                                    ProductoDAO productoDAO = new ProductoDAO();
-                                    Producto producto = (Producto) productoDAO.findById(rsProducto.getInt("idProducto"));
-                                    int cantidad = rsProducto.getInt("cantidad");
-                                    productos.add(new Comanda.ProductoCantidad(producto, cantidad));
-                                }
-                            }
-                        }
-                        comanda.getProductos().addAll(productos);
-                        return comanda;
+                        return mapResultSetToComanda(rs);
                     }
                 }
             }
@@ -107,28 +88,7 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
             try (PreparedStatement ps = con.prepareStatement(FINDALL);
                  ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Comanda comanda = new Comanda();
-                    comanda.setId(rs.getInt("id"));
-                    comanda.setHoraComanda(rs.getString("horaComanda"));
-
-                    MesaDAO mesaDAO = new MesaDAO();
-                    Mesa mesa = mesaDAO.findById(rs.getInt("idMesa"));
-                    comanda.setMesa(mesa);
-
-                    List<Comanda.ProductoCantidad> productos = new ArrayList<>();
-                    try (PreparedStatement psProducto = con.prepareStatement("SELECT idProducto, cantidad FROM comanda_producto WHERE idComanda = ?")) {
-                        psProducto.setInt(1, comanda.getId());
-                        try (ResultSet rsProducto = psProducto.executeQuery()) {
-                            while (rsProducto.next()) {
-                                ProductoDAO productoDAO = new ProductoDAO();
-                                Producto producto = (Producto) productoDAO.findById(rsProducto.getInt("idProducto"));
-                                int cantidad = rsProducto.getInt("cantidad");
-                                productos.add(new Comanda.ProductoCantidad(producto, cantidad));
-                            }
-                        }
-                    }
-                    comanda.getProductos().addAll(productos);
-                    comandas.add(comanda);
+                    comandas.add(mapResultSetToComanda(rs));
                 }
             }
         }
@@ -136,7 +96,58 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
     }
 
     @Override
-    public void close() {
+    public void close() {}
 
+    public LocalTime obtenerHoraPrimeraComanda(int idMesa) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(SELECTPRIMERACOMANDA)) {
+            ps.setInt(1, idMesa);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getTime("horaComanda").toLocalTime();
+                }
+            }
+        }
+        return null;
+    }
+
+    private Comanda mapResultSetToComanda(ResultSet rs) throws SQLException {
+        Comanda comanda = new Comanda();
+        comanda.setId(rs.getInt("id"));
+        comanda.setHoraComanda(rs.getString("horaComanda"));
+
+        // Asignar la mesa asociada
+        MesaDAO mesaDAO = new MesaDAO();
+        Mesa mesa = mesaDAO.findById(rs.getInt("idMesa"));
+        comanda.setMesa(mesa);
+
+        // Obtener los productos asociados a la comanda
+        List<Comanda.ProductoCantidad> productos = new ArrayList<>();
+        try (PreparedStatement psProducto = con.prepareStatement("SELECT idProducto, cantidad FROM comanda_producto WHERE idComanda = ?")) {
+            psProducto.setInt(1, comanda.getId());
+            try (ResultSet rsProducto = psProducto.executeQuery()) {
+                while (rsProducto.next()) {
+                    ProductoDAO productoDAO = new ProductoDAO();
+                    Producto producto = productoDAO.findById(rsProducto.getInt("idProducto"));
+                    int cantidad = rsProducto.getInt("cantidad");
+                    productos.add(new Comanda.ProductoCantidad(producto, cantidad));
+                }
+            }
+        }
+        comanda.getProductos().addAll(productos);
+
+        return comanda;
+    }
+
+
+    public Comanda findComandaAbiertaPorMesa(int idMesa) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(FINDCOMANDAABIERTA)) {
+            ps.setInt(1, idMesa);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToComanda(rs);
+                }
+            }
+        }
+        return null; // No hay comanda abierta
     }
 }

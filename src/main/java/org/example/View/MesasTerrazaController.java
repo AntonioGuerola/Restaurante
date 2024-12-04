@@ -3,6 +3,7 @@ package org.example.View;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.MesaDAO;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class MesasTerrazaController extends Controller implements Initializable {
     @FXML
-    private VBox vbox;  // El VBox donde se agregarán los botones
+    private TilePane tilePane;
 
     private final MesaDAO mesaDAO;
 
@@ -60,7 +61,7 @@ public class MesasTerrazaController extends Controller implements Initializable 
                 });
 
                 // Añadimos el botón al VBox
-                vbox.getChildren().add(button);
+                tilePane.getChildren().add(button);
             }
 
         } catch (SQLException e) {

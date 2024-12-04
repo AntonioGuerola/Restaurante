@@ -88,6 +88,6 @@ public class InsertProductoController extends Controller implements Initializabl
 
     @FXML
     private void goBack() throws IOException {
-        App.currentController.changeScene(Scenes.START, null);
+        App.currentController.changeScene(Scenes.AJUSTES, null);
     }
 }

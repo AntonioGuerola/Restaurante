@@ -3,21 +3,50 @@ package org.example.View;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import org.example.App;
+import org.example.Model.DAO.ComandaDAO;
 import org.example.Model.DAO.ProductoDAO;
+import org.example.Model.Entity.Mesa;
 import org.example.Model.Entity.Producto;
+import org.example.Model.Singleton.MesaSingleton;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class VinoController extends Controller implements Initializable {
     @FXML
-    private VBox vbox;
+    private Label tipoMesaLabel;
 
+    @FXML
+    private Label numMesaLabel;
+
+    @FXML
+    private Label fechaLabel;
+
+    @FXML
+    private Label horaMesaLabel;
+
+    @FXML
+    private Label tiempoLabel;
+
+    @FXML
+    private Label cuentaLabel;
+
+    @FXML
+    private TilePane tilePane;
+
+    Mesa mesaSeleccionada = MesaSingleton.getInstance().getCurrentMesa();
     private final ProductoDAO vinoDAO;
+
+    private final ComandaDAO comandaDAO = new ComandaDAO();
 
     public VinoController() {
         this.vinoDAO = new ProductoDAO();
@@ -35,6 +64,36 @@ public class VinoController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (mesaSeleccionada != null) {
+            tipoMesaLabel.setText("Tipo: " + (mesaSeleccionada.getTipo() != null ? mesaSeleccionada.getTipo().name() : "N/A"));
+            numMesaLabel.setText("Número: " + mesaSeleccionada.getNumMesa());
+            fechaLabel.setText("Fecha: " + (mesaSeleccionada.getFecha() != null ? mesaSeleccionada.getFecha() : "N/A"));
+            horaMesaLabel.setText("Hora: " + (mesaSeleccionada.getHoraMesa() != null ? mesaSeleccionada.getHoraMesa() : "N/A"));
+
+            try {
+                int mesaId = MesaSingleton.getInstance().getCurrentMesa().getId();
+
+                // Obtener la hora de la primera comanda
+                LocalTime horaPrimeraComanda = comandaDAO.obtenerHoraPrimeraComanda(mesaId);
+
+                if (horaPrimeraComanda != null) {
+                    // Calcular la diferencia en minutos
+                    long minutosTranscurridos = Duration.between(horaPrimeraComanda, LocalTime.now()).toMinutes();
+
+                    // Mostrar el tiempo en la etiqueta
+                    tiempoLabel.setText("Tiempo: " + minutosTranscurridos + " mins");
+                } else {
+                    // No hay comandas para esta mesa
+                    tiempoLabel.setText("Tiempo: 0 mins");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                tiempoLabel.setText("Tiempo: Error");
+            }
+
+            cuentaLabel.setText("Cuenta: $" + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00"));
+        }
+
         List<Producto> productos = vinoDAO.findAllVino();
 
         for (Producto producto : productos) {
@@ -46,7 +105,7 @@ public class VinoController extends Controller implements Initializable {
                 System.out.println("Producto seleccionado: " + producto.getNombre());
             });
 
-            vbox.getChildren().add(button);
+            tilePane.getChildren().add(button);
         }
 
     }
