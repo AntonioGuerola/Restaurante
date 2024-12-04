@@ -13,12 +13,12 @@ import java.util.List;
 
 public class ComandaProductoDAO implements DAO<ComandaProducto, Integer> {
 
-    private static final String INSERT = "INSERT INTO comanda_producto (comanda_id, producto_id, cantidad) VALUES (?, ?, ?)";
-    private static final String DELETE = "DELETE FROM comanda_producto WHERE comanda_id = ? AND producto_id = ?";
-    private static final String FINDALL = "SELECT cp.comanda_id, cp.producto_id, cp.cantidad, p.nombre, p.precio, p.tipo " +
-            "FROM comanda_producto cp " +
-            "JOIN producto p ON cp.producto_id = p.id " +
-            "WHERE cp.comanda_id = ?";
+    private static final String INSERT = "INSERT INTO comandaproducto (idComanda, idProducto, cantidad) VALUES (?, ?, ?)";
+    private static final String DELETE = "DELETE FROM comandaproducto WHERE idComanda = ? AND idProducto = ?";
+    private static final String FINDALL = "SELECT cp.idComanda, cp.idProducto, cp.cantidad, p.nombre, p.precio, p.tipo " +
+            "FROM comandaproducto cp " +
+            "JOIN producto p ON cp.idProducto = p.id " +
+            "WHERE cp.idComanda = ?";
 
     private Connection con = MySQLConnection.getConnection();
 
@@ -29,12 +29,33 @@ public class ComandaProductoDAO implements DAO<ComandaProducto, Integer> {
     @Override
     public ComandaProducto save(ComandaProducto comandaProducto) throws SQLException {
         if (con != null) {
-            try (PreparedStatement ps = con.prepareStatement(INSERT)) {
-                ps.setInt(1, comandaProducto.getCesta().getId());
-                ps.setInt(2, comandaProducto.getProducto().getId());
-                ps.setInt(3, comandaProducto.getCantidad());
+            // Verificar si ya existe el producto en la comanda
+            String sqlCheck = "SELECT cantidad FROM comandaproducto WHERE idComanda = ? AND idProducto = ?";
+            try (PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {
+                psCheck.setInt(1, comandaProducto.getCesta().getId());
+                psCheck.setInt(2, comandaProducto.getProducto().getId());
+                ResultSet rs = psCheck.executeQuery();
 
-                ps.executeUpdate();
+                if (rs.next()) {
+                    // Producto ya existe: actualizar cantidad
+                    int nuevaCantidad = rs.getInt("cantidad") + comandaProducto.getCantidad();
+                    String sqlUpdate = "UPDATE comandaproducto SET cantidad = ? WHERE idComanda = ? AND idProducto = ?";
+                    try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdate)) {
+                        psUpdate.setInt(1, nuevaCantidad);
+                        psUpdate.setInt(2, comandaProducto.getCesta().getId());
+                        psUpdate.setInt(3, comandaProducto.getProducto().getId());
+                        psUpdate.executeUpdate();
+                    }
+                } else {
+                    // Producto no existe: insertar nuevo registro
+                    String sqlInsert = "INSERT INTO comandaproducto (idComanda, idProducto, cantidad) VALUES (?, ?, ?)";
+                    try (PreparedStatement psInsert = con.prepareStatement(sqlInsert)) {
+                        psInsert.setInt(1, comandaProducto.getCesta().getId());
+                        psInsert.setInt(2, comandaProducto.getProducto().getId());
+                        psInsert.setInt(3, comandaProducto.getCantidad());
+                        psInsert.executeUpdate();
+                    }
+                }
             }
         }
         return comandaProducto;

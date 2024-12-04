@@ -49,6 +49,8 @@ public class CategoriaProductosController extends Controller implements Initiali
     Mesa mesaSeleccionada = MesaSingleton.getInstance().getCurrentMesa();
     private final ComandaDAO comandaDAO = new ComandaDAO();
 
+
+
     @Override
     public void onOpen(Object input) throws IOException {
 
