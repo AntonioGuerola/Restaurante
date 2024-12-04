@@ -9,11 +9,13 @@ public class Comanda {
     private String horaComanda;
     private Mesa mesa;
     private List<ProductoCantidad> productos;
+    private EstadoComanda estadoComanda;
 
     public Comanda(String horaComanda, Mesa mesa) {
         this.horaComanda = horaComanda;
         this.mesa = mesa;
         this.productos = new ArrayList<>();
+        this.estadoComanda = EstadoComanda.ABIERTA;
     }
 
     public Comanda(){
@@ -48,6 +50,18 @@ public class Comanda {
         return productos;
     }
 
+    public void setProductos(List<ProductoCantidad> productos) {
+        this.productos = productos;
+    }
+
+    public EstadoComanda getEstadoComanda() {
+        return estadoComanda;
+    }
+
+    public void setEstadoComanda(EstadoComanda estadoComanda) {
+        this.estadoComanda = estadoComanda;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -65,8 +79,10 @@ public class Comanda {
     public String toString() {
         return "Comanda{" +
                 "id=" + id +
-                ", horaComanda=" + horaComanda +
+                ", horaComanda='" + horaComanda + '\'' +
                 ", mesa=" + mesa +
+                ", productos=" + productos +
+                ", estadoComanda=" + estadoComanda +
                 '}';
     }
 

@@ -21,7 +21,8 @@ public enum Scenes {
     CARNE("View/carne.fxml"),
     PESCADO("View/pescado.fxml"),
     VERDURA("View/verdura.fxml"),
-    POSTRE("View/postre.fxml");
+    POSTRE("View/postre.fxml"),
+    CONFIRMARCOMANDA("View/confirmarComanda.fxml");
 
     private String url;
 
