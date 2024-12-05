@@ -9,9 +9,11 @@ import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.ComandaDAO;
 import org.example.Model.DAO.MesaDAO;
+import org.example.Model.Entity.Comanda;
 import org.example.Model.Entity.Mesa;
 import org.example.Model.Entity.TipoMesa;
 import org.example.Model.Entity.TipoProducto;
+import org.example.Model.Singleton.ComandaSingleton;
 import org.example.Model.Singleton.MesaSingleton;
 
 import java.io.IOException;
@@ -48,7 +50,6 @@ public class CategoriaProductosController extends Controller implements Initiali
 
     Mesa mesaSeleccionada = MesaSingleton.getInstance().getCurrentMesa();
     private final ComandaDAO comandaDAO = new ComandaDAO();
-
 
 
     @Override
@@ -143,9 +144,26 @@ public class CategoriaProductosController extends Controller implements Initiali
     }
 
 
-
     @FXML
     private void goBack() throws IOException {
+        try {
+            Comanda comandaAbierta = ComandaSingleton.getInstance().getCurrentComanda();
+
+            if (comandaAbierta != null) {
+                // Eliminar la comanda abierta de la base de datos
+                comandaDAO.delete(comandaAbierta);
+                System.out.println("Comanda abierta eliminada de la base de datos.");
+
+                // Limpiar el Singleton si está asociado a la comanda
+                ComandaSingleton.closeSession();
+                System.out.println("Comanda eliminada del Singleton.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error al eliminar la comanda abierta.");
+        }
+
+        // Cambiar la escena dependiendo del tipo de mesa
         TipoMesa tipo = mesaSeleccionada.getTipo();
         if (tipo == TipoMesa.TERRAZA) {
             MesaSingleton.closeSession();
@@ -155,6 +173,7 @@ public class CategoriaProductosController extends Controller implements Initiali
             App.currentController.changeScene(Scenes.MESASCAFETERIA, null);
         }
     }
+
 
     @FXML
     private void goToRefrescos() throws IOException {
@@ -194,5 +213,11 @@ public class CategoriaProductosController extends Controller implements Initiali
     @FXML
     private void enviarComanda() throws IOException {
         App.currentController.changeScene(Scenes.CONFIRMARCOMANDA, null);
+    }
+
+    @FXML
+    private void goToCobrar() throws IOException {
+        App.currentController.changeScene(Scenes.CONFIRMARCOMANDA, null);
+
     }
 }

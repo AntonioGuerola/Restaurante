@@ -12,11 +12,11 @@ import java.util.List;
 
 public class ComandaDAO implements DAO<Comanda, Integer> {
 
-    private static final String INSERT = "INSERT INTO comanda (horaComanda, idMesa, estado) VALUES (?, ?, ?)";
+    private static final String INSERT = "INSERT INTO comanda (horaComanda, idMesa,  tipoMesa, numMesa, estado) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE comanda SET horaComanda, estado = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM comanda WHERE id = ?";
-    private static final String FINDBYID = "SELECT id, horaComanda, idMesa, estado FROM comanda WHERE id = ?";
-    private static final String FINDALL = "SELECT id, horaComanda, idMesa, estado FROM comanda";
+    private static final String FINDBYID = "SELECT id, horaComanda, idMesa, tipoMesa, numMesa, estado FROM comanda WHERE id = ?";
+    private static final String FINDALL = "SELECT id, horaComanda, idMesa, tipoMesa, numMesa, estado FROM comanda";
     private static final String INSERTPRODUCTOCOMANDA = "INSERT INTO comandaproducto (idComanda, idProducto, cantidad) VALUES (?, ?, ?)";
     private static final String SELECTPRIMERACOMANDA = "SELECT horaComanda FROM comanda WHERE idMesa = ? ORDER BY horaComanda ASC LIMIT 1";
     private static final String FINDCOMANDAABIERTA = "SELECT * FROM comanda WHERE idMesa = ? AND estado = 'ABIERTA'";
@@ -33,7 +33,9 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
                 try (PreparedStatement ps = con.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setTime(1, Time.valueOf(LocalTime.now()));
                     ps.setInt(2, comanda.getMesa().getId());
-                    ps.setString(3, comanda.getEstadoComanda().name());
+                    ps.setString(3, comanda.getMesa().getTipo().name());
+                    ps.setInt(4, comanda.getMesa().getNumMesa());
+                    ps.setString(5, comanda.getEstadoComanda().name());
 
                     int affectedRows = ps.executeUpdate();
                     if (affectedRows > 0) {
@@ -58,7 +60,7 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
             if (con != null) {
                 try (PreparedStatement ps = con.prepareStatement(UPDATE)) {
                     ps.setString(1, comanda.getHoraComanda());
-                    ps.setString(3, comanda.getEstadoComanda().name());
+                    ps.setString(2, comanda.getEstadoComanda().name());
 
                     int affectedRows = ps.executeUpdate();
                     if (affectedRows > 0) {
@@ -162,10 +164,16 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
                 }
             }
         }
+
+        // Inicializar la lista si es null y añadir los productos
+        if (comanda.getProductos() == null) {
+            comanda.setProductos(new ArrayList<>());
+        }
         comanda.getProductos().addAll(productos);
 
         return comanda;
     }
+
 
 
     public Comanda findComandaAbiertaPorMesa(int idMesa) throws SQLException {

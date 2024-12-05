@@ -72,24 +72,19 @@ public class CervezaController extends Controller implements Initializable {
 
             try {
                 int mesaId = mesaSeleccionada.getId();
-                // Obtener la hora de la primera comanda
                 LocalTime horaPrimeraComanda = comandaDAO.obtenerHoraPrimeraComanda(mesaId);
 
                 if (horaPrimeraComanda != null) {
-                    // Calcular la diferencia en minutos
                     long minutosTranscurridos = Duration.between(horaPrimeraComanda, LocalTime.now()).toMinutes();
-
-                    // Mostrar el tiempo en la etiqueta
                     tiempoLabel.setText("Tiempo: " + minutosTranscurridos + " mins");
                 } else {
-                    // No hay comandas para esta mesa
                     tiempoLabel.setText("Tiempo: 0 mins");
                 }
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 tiempoLabel.setText("Tiempo: Error");
             }
-
             cuentaLabel.setText("Cuenta: $" + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00"));
         }
 
@@ -107,7 +102,6 @@ public class CervezaController extends Controller implements Initializable {
             button.setOnAction(event -> agregarProductoAComanda(producto));
             tilePane.getChildren().add(button);
         }
-
     }
 
     private void agregarProductoAComanda(Producto producto) {
@@ -123,8 +117,7 @@ public class CervezaController extends Controller implements Initializable {
 
             // Guardar producto en la base de datos.
             ComandaProductoDAO comandaProductoDAO = new ComandaProductoDAO();
-            comandaProductoDAO.save(new ComandaProducto(comandaActual, producto, 1));
-
+            comandaProductoDAO.save(new ComandaProducto(comandaActual, 1, producto, producto ));
             System.out.println("Producto agregado: " + producto.getNombre());
         } catch (SQLException e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.example.Model.Singleton.ComandaSingleton;
 import org.example.View.AppController;
 import org.example.View.Scenes;
 import org.example.View.View;
