@@ -6,22 +6,24 @@ public class ComandaProducto {
     private Comanda comanda;
     private Producto producto;
     private int cantidad;
+    private Producto nombreProducto;
 
-    public ComandaProducto(Comanda comanda, Producto producto, int cantidad) {
+    public ComandaProducto(Comanda comanda, int cantidad, Producto producto, Producto nombreProducto) {
         this.comanda = comanda;
-        this.producto = producto;
         this.cantidad = cantidad;
+        this.producto = producto;
+        this.producto = nombreProducto;
     }
 
     public ComandaProducto() {
         cantidad = 0;
     }
 
-    public Comanda getCesta() {
+    public Comanda getcomanda() {
         return comanda;
     }
 
-    public void setCesta(Comanda comanda) {
+    public void setcomanda(Comanda comanda) {
         this.comanda = comanda;
     }
 
@@ -39,6 +41,22 @@ public class ComandaProducto {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public Comanda getComanda() {
+        return comanda;
+    }
+
+    public void setComanda(Comanda comanda) {
+        this.comanda = comanda;
+    }
+
+    public Producto getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(Producto nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
     @Override
@@ -60,6 +78,7 @@ public class ComandaProducto {
                 "comanda=" + comanda +
                 ", producto=" + producto +
                 ", cantidad=" + cantidad +
+                ", nombreProducto=" + nombreProducto +
                 '}';
     }
 }

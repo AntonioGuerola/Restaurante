@@ -29,6 +29,9 @@
         <!-- Botón para enviar comanda -->
         <Button fx:id="btnEnviarComanda" text="Enviar Comanda" onAction="#enviarComanda"
                 style="-fx-font-size: 14px; -fx-padding: 8px;" />
+
+        <Button fx:id="btnCobrar" text="Cobrar" onAction="#goToCobrar"
+                style="-fx-font-size: 14px; -fx-padding: 8px;" />
     </VBox>
 
     <!-- Zona principal con el ScrollPane -->

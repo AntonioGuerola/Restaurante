@@ -19,7 +19,7 @@ public class Comanda {
     }
 
     public Comanda(){
-
+        this.productos = new ArrayList<>();
     }
 
     public int getId() {
