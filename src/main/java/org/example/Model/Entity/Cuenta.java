@@ -42,8 +42,22 @@ public class Cuenta {
     }
 
     public void setSumaTotal(double sumaTotal) {
-        this.sumaTotal = sumaTotal;
+        double total = 0.0;
+        if (comandas != null && !comandas.isEmpty()) {
+            for (Comanda comanda : comandas) {
+                if (comanda.getProductos() != null) {
+                    for (Comanda.ProductoCantidad productoCantidad : comanda.getProductos()) {
+                        Producto producto = productoCantidad.getProducto();
+                        if (producto != null) {
+                            total += producto.getPrecio() * productoCantidad.getCantidad();
+                        }
+                    }
+                }
+            }
+        }
+        this.sumaTotal = total;
     }
+
 
     public String getHoraCobro() {
         return horaCobro;
@@ -83,17 +97,5 @@ public class Cuenta {
                 ", horaCobro='" + horaCobro + '\'' +
                 ", comandas=" + comandas +
                 '}';
-    }
-
-    public void agregarComanda(Comanda comanda) {
-        comandas.add(comanda);
-        calcularTotal();
-    }
-
-    private void calcularTotal() {
-        sumaTotal = 0;
-        for (Comanda comanda : comandas) {
-            sumaTotal += comanda.calcularTotal();
-        }
     }
 }

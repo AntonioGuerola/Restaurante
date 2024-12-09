@@ -118,5 +118,8 @@ public class Comanda {
         public int getCantidad() {
             return cantidad;
         }
+
+        public void setCantidad(int i) {
+        }
     }
 }

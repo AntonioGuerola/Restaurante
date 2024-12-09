@@ -25,7 +25,7 @@ public class ProductoDAO implements DAO<Producto, Integer> {
     private static final String UPDATE = "UPDATE producto SET nombre = ?, precio = ?, tipoProducto = ? WHERE id = ?";
     private static final String CANTIDADREFRESCOS = "SELECT COUNT(*) FROM producto WHERE tipoProducto = 'REFRESCO'";
 
-    private Connection con = MySQLConnection.getConnection();
+    private Connection con;
 
     public ProductoDAO() {
         this.con = MySQLConnection.getConnection();

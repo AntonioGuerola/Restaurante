@@ -19,11 +19,11 @@ public class ComandaProducto {
         cantidad = 0;
     }
 
-    public Comanda getcomanda() {
+    public Comanda getComanda() {
         return comanda;
     }
 
-    public void setcomanda(Comanda comanda) {
+    public void setComanda(Comanda comanda) {
         this.comanda = comanda;
     }
 
@@ -41,14 +41,6 @@ public class ComandaProducto {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public Comanda getComanda() {
-        return comanda;
-    }
-
-    public void setComanda(Comanda comanda) {
-        this.comanda = comanda;
     }
 
     public Producto getNombreProducto() {
