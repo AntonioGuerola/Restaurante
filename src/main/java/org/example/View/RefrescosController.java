@@ -123,6 +123,8 @@ public class RefrescosController extends Controller implements Initializable {
         }
     }
 
+
+
     @FXML
     private void goBack() throws IOException {
         if (comandaActual != null) {
