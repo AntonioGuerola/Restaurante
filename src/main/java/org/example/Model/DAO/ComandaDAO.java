@@ -6,6 +6,7 @@ import org.example.Model.Entity.*;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,11 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
     private static final String DELETE = "DELETE FROM comanda WHERE id = ?";
     private static final String FINDBYID = "SELECT id, horaComanda, idMesa, tipoMesa, numMesa, estado FROM comanda WHERE id = ?";
     private static final String FINDALL = "SELECT id, horaComanda, idMesa, tipoMesa, numMesa, estado FROM comanda";
-    private static final String INSERTPRODUCTOCOMANDA = "INSERT INTO comandaproducto (idComanda, cantidad, idProducto, nombreProducto) VALUES (?, ?, ?, ?)";
-    private static final String UPDATEPRODUCTOCOMANDA = "UPDATE comandaproducto SET cantidad = ?, idProducto = ?, nombreProducto = ? WHERE idComanda = ?";
     private static final String SELECTPRIMERACOMANDA = "SELECT horaComanda FROM comanda WHERE idMesa = ? ORDER BY horaComanda ASC LIMIT 1";
     private static final String FINDCOMANDAABIERTA = "SELECT * FROM comanda WHERE idMesa = ? AND estado = 'ABIERTA'";
+    private static final String UPDATEESTADO = "UPDATE comanda SET estado = ? WHERE id = ?";
+    private static final String UPDATEHORACOMANDA = "UPDATE comanda SET horaComanda = ? WHERE id = ?";
+
     private Connection con;
 
     public ComandaDAO() {
@@ -207,8 +209,6 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
         return comanda;
     }
 
-
-
     public Comanda findComandaAbiertaPorMesa(int idMesa) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement(FINDCOMANDAABIERTA)) {
             ps.setInt(1, idMesa);
@@ -219,5 +219,32 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
             }
         }
         return null; // No hay comanda abierta
+    }
+
+    public boolean updateEstado(int comandaId, EstadoComanda nuevoEstado) throws SQLException {
+        boolean actualizado = false;
+
+        try (PreparedStatement ps = con.prepareStatement(UPDATEESTADO)) {
+            // Establecemos el nuevo estado y el id de la comanda
+            ps.setString(1, nuevoEstado.name());
+            ps.setInt(2, comandaId);
+
+            // Ejecutar la actualización
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows > 0) {
+                actualizado = true; // Si se afectaron filas, significa que la actualización fue exitosa
+            }
+        }
+
+        return actualizado; // Devuelve verdadero si la actualización fue exitosa, falso si no
+    }
+
+    public void actualizarHoraComanda(int idComanda, String horaActual) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(UPDATEHORACOMANDA)) {
+            ps.setString(1, horaActual);
+            ps.setInt(2, idComanda);
+            ps.executeUpdate();
+        }
     }
 }

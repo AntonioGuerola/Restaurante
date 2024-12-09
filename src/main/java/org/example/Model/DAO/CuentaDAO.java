@@ -16,23 +16,24 @@ import java.util.List;
 
 public class CuentaDAO implements DAO<Cuenta, Integer> {
     private static final String INSERT = "INSERT INTO cuenta (idMesa, sumaTotal) VALUES (?,?)";
-    private static final String UPDATE = "UPDATE cuenta SET sumaTotal = ?, horaCobro = ?, WHERE id = ?";
+    private static final String UPDATE = "UPDATE cuenta SET sumaTotal = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM cuenta WHERE id = ?";
     private static final String FINDBYID = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta WHERE id = ?";
     private static final String FINDALL = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta";
+    private static final String FINDBYMESAID = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta WHERE idMesa = ?";
 
     private final Connection con;
     public CuentaDAO(){this.con = MySQLConnection.getConnection();}
 
     @Override
     public Cuenta save(Cuenta entity) throws SQLException {
-        if (entity.getId() == 0) {
-            if (con != null) {
+        if (con != null) {
+            if (entity.getId() == 0) {
+                // Inserción nueva
                 try (PreparedStatement ps = con.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setInt(1, entity.getMesa().getId());
                     ps.setDouble(2, entity.getSumaTotal());
                     ps.executeUpdate();
-
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
                             entity.setId(rs.getInt(1));
@@ -40,17 +41,17 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
                     }
                 }
             } else {
-                if (con != null){
-                    try(PreparedStatement ps = con.prepareStatement(UPDATE)){
-                        ps.setDouble(1, entity.getSumaTotal());
-                        ps.setString(2, entity.getHoraCobro());
-                        ps.executeUpdate();
-                    }
+                // Actualización existente
+                try (PreparedStatement ps = con.prepareStatement(UPDATE)) {
+                    ps.setDouble(1, entity.getSumaTotal());
+                    ps.setInt(2, entity.getId()); // Corregido índice
+                    ps.executeUpdate();
                 }
             }
         }
         return entity;
     }
+
 
     @Override
     public Cuenta delete(Cuenta cuenta) throws SQLException {
@@ -98,7 +99,7 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
 
     }
 
-    private Cuenta mapResultSetToCuenta(ResultSet rs) throws SQLException{
+    private Cuenta mapResultSetToCuenta(ResultSet rs) throws SQLException {
         Cuenta cuenta = new Cuenta();
         cuenta.setId(rs.getInt("id"));
 
@@ -106,18 +107,31 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
         Mesa mesa = mesaDAO.findById(rs.getInt("idMesa"));
         cuenta.setMesa(mesa);
 
+        // Asignar el valor directamente desde la base de datos
         cuenta.setSumaTotal(rs.getDouble("sumaTotal"));
-        mesa.setFecha(rs.getDate("fecha").toString());
 
-        // Verificar si "horaMesa" es null antes de convertirlo
+        // Verificar si "horaCobro" es null antes de convertirlo
         Time horaCobro = rs.getTime("horaCobro");
         if (horaCobro != null) {
             cuenta.setHoraCobro(horaCobro.toString());
         } else {
             cuenta.setHoraCobro(""); // Asignar valor vacío si es null
         }
-
-        mesa.setTiempo(rs.getInt("tiempo"));
         return cuenta;
+    }
+
+
+    public Cuenta findByMesaId(int mesaId) throws SQLException {
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(FINDBYMESAID)) {
+                ps.setInt(1, mesaId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return mapResultSetToCuenta(rs); // Reutilizamos el método que mapea el ResultSet a una cuenta
+                    }
+                }
+            }
+        }
+        return null; // Si no se encuentra una cuenta asociada a la mesa
     }
 }

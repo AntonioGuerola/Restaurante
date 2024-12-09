@@ -19,8 +19,8 @@
 
     <!-- Contenedor para los botones, centrados en la parte inferior -->
     <HBox layoutY="480.0" prefWidth="900.0" spacing="20.0" alignment="CENTER" style="-fx-padding: 10;">
-        <Button fx:id="btnEnviar" text="Enviar" prefWidth="120.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
-        <Button fx:id="btnVolver" onAction="#goBack" text="Volver" prefWidth="120.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
-        <Button fx:id="btnModificar" onAction="#goToModificar" text="Modificar Comanda" prefWidth="120.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
+        <Button fx:id="btnEnviar" onAction="#confirmarComanda" text="Enviar" prefWidth="150.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
+        <Button fx:id="btnVolver" onAction="#goBack" text="Volver" prefWidth="150.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
+        <Button fx:id="btnModificar" onAction="#goToModificar" text="Modificar Comanda" prefWidth="150.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
     </HBox>
 </AnchorPane>

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     private static final String FINDALL = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa";
     private static final String CANTIDADTERRAZA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'TERRAZA'";
     private static final String CANTIDADCAFETERIA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'CAFETERIA'";
+    private static final String UPDATEHORAMESA = "UPDATE mesa SET horaMesa = ? WHERE id = ?";
 
     private final Connection con;
 
@@ -156,5 +158,13 @@ public class MesaDAO implements DAO<Mesa, Integer> {
             }
         }
         return null;
+    }
+
+    public void actualizarHoraMesa(int idMesa, String horaActual) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(UPDATEHORAMESA)) {
+            ps.setString(1, horaActual);
+            ps.setInt(2, idMesa);
+            ps.executeUpdate();
+        }
     }
 }
