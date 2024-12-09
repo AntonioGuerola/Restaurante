@@ -13,7 +13,8 @@ import java.util.List;
 
 public class MesaDAO implements DAO<Mesa, Integer> {
 
-    private static final String INSERT = "INSERT INTO mesa (tipo, numMesa, fecha, horaMesa, tiempo, cuenta) VALUES (?,?,?,?,?,?)";
+    private static final String INSERT = "INSERT INTO mesa (tipo, numMesa, fecha, tiempo, cuenta) VALUES (?,?,?,?,?)";
+    private static final String UPDATE = "UPDATE mesa SET horaMesa = ?, tiempo = ?, cuenta = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM mesa WHERE id = ?";
     private static final String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
     private static final String FINDBYNUMMESA = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE numMesa = ? AND tipo LIKE ?";
@@ -29,18 +30,31 @@ public class MesaDAO implements DAO<Mesa, Integer> {
 
     @Override
     public Mesa save(Mesa entity) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, entity.getTipo().name());
-            ps.setInt(2, entity.getNumMesa());
-            ps.setDate(3, Date.valueOf(LocalDate.now()));
-            ps.setTime(4, Time.valueOf(LocalTime.now()));
-            ps.setInt(5, entity.getTiempo());
-            ps.setDouble(6, entity.getCuenta() != null ? entity.getCuenta().getSumaTotal() : 0);
-            ps.executeUpdate();
+        if (entity.getId() == 0) {
+            if (con != null) {
+                try (PreparedStatement ps = con.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, entity.getTipo().name());
+                    ps.setInt(2, entity.getNumMesa());
+                    ps.setDate(3, Date.valueOf(LocalDate.now()));
+                    ps.setInt(4, entity.getTiempo());
+                    ps.setDouble(5, entity.getCuenta() != null ? entity.getCuenta().getSumaTotal() : 0);
+                    ps.executeUpdate();
 
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    entity.setId(rs.getInt(1));
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            entity.setId(rs.getInt(1));
+                        }
+                    }
+                }
+            } else {
+                if (con != null){
+                    try(PreparedStatement ps = con.prepareStatement(UPDATE)){
+                        ps.setTime(1, Time.valueOf(LocalTime.now()));
+                        ps.setInt(2, entity.getTiempo());
+                        ps.setDouble(3, entity.getCuenta() != null ? entity.getCuenta().getSumaTotal() : 0);
+
+                        ps.executeUpdate();
+                    }
                 }
             }
         }
@@ -95,10 +109,19 @@ public class MesaDAO implements DAO<Mesa, Integer> {
         mesa.setTipo(TipoMesa.valueOf(rs.getString("tipo")));
         mesa.setNumMesa(rs.getInt("numMesa"));
         mesa.setFecha(rs.getDate("fecha").toString());
-        mesa.setHoraMesa(rs.getTime("horaMesa").toString());
+
+        // Verificar si "horaMesa" es null antes de convertirlo
+        Time horaMesa = rs.getTime("horaMesa");
+        if (horaMesa != null) {
+            mesa.setHoraMesa(horaMesa.toString());
+        } else {
+            mesa.setHoraMesa(""); // Asignar valor vacío si es null
+        }
+
         mesa.setTiempo(rs.getInt("tiempo"));
         return mesa;
     }
+
 
     public int contarMesasTerraza() throws SQLException {
         int count = 0;

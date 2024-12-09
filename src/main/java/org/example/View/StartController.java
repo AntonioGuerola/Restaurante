@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.example.App;
 import org.example.Model.DAO.MesaDAO;
+import org.example.Model.Singleton.ComandaSingleton;
 import org.example.Model.Singleton.MesaSingleton;
 import org.example.Model.Utils.JavaFXUtils;
 
@@ -57,6 +58,7 @@ public class StartController extends Controller implements Initializable {
     @FXML
     private void close() throws IOException {
         MesaSingleton.closeSession();
+        ComandaSingleton.closeSession();
         System.exit(0);
     }
 }

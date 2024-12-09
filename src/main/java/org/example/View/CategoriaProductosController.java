@@ -147,33 +147,47 @@ public class CategoriaProductosController extends Controller implements Initiali
     @FXML
     private void goBack() throws IOException {
         try {
-            Comanda comandaAbierta = ComandaSingleton.getInstance().getCurrentComanda();
+            // Intentar obtener la instancia del Singleton
+            ComandaSingleton comandaSingleton = ComandaSingleton.getInstance();
 
-            if (comandaAbierta != null) {
-                // Eliminar la comanda abierta de la base de datos
-                comandaDAO.delete(comandaAbierta);
-                System.out.println("Comanda abierta eliminada de la base de datos.");
+            if (comandaSingleton != null && comandaSingleton.getCurrentComanda() != null) {
+                Comanda comandaAbierta = comandaSingleton.getCurrentComanda();
 
-                // Limpiar el Singleton si está asociado a la comanda
+                // Intentar eliminar la comanda de la base de datos
+                try {
+                    comandaDAO.delete(comandaAbierta);
+                    System.out.println("Comanda abierta eliminada de la base de datos.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.err.println("Error al eliminar la comanda abierta de la base de datos.");
+                }
+
+                // Limpiar el Singleton
                 ComandaSingleton.closeSession();
                 System.out.println("Comanda eliminada del Singleton.");
+            } else {
+                System.out.println("No hay una comanda activa en el Singleton.");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error al eliminar la comanda abierta.");
+            System.err.println("Error al procesar la comanda.");
         }
 
-        // Cambiar la escena dependiendo del tipo de mesa
+        // Cambiar la escena, independientemente de lo que sucedió antes
         TipoMesa tipo = mesaSeleccionada.getTipo();
-        if (tipo == TipoMesa.TERRAZA) {
-            MesaSingleton.closeSession();
-            App.currentController.changeScene(Scenes.MESASTERRAZA, null);
-        } else {
-            MesaSingleton.closeSession();
-            App.currentController.changeScene(Scenes.MESASCAFETERIA, null);
+        try {
+            if (tipo == TipoMesa.TERRAZA) {
+                MesaSingleton.closeSession();
+                App.currentController.changeScene(Scenes.MESASTERRAZA, null);
+            } else {
+                MesaSingleton.closeSession();
+                App.currentController.changeScene(Scenes.MESASCAFETERIA, null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cambiar de escena.");
         }
     }
-
 
     @FXML
     private void goToRefrescos() throws IOException {

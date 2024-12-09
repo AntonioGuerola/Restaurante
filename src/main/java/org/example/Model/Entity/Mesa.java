@@ -12,7 +12,6 @@ public class Mesa {
     private String horaMesa;
     private int tiempo;
     private Cuenta cuenta;
-    private List<Comanda> comandas;
 
     public Mesa(TipoMesa tipo, int numMesa, String fecha, String horaMesa) {
         this.tipo = tipo;
@@ -20,7 +19,6 @@ public class Mesa {
         this.fecha = fecha;
         this.horaMesa = horaMesa;
         this.tiempo = tiempo;
-        this.comandas = new ArrayList<>();
     }
 
     public Mesa() {
@@ -83,15 +81,6 @@ public class Mesa {
         this.cuenta = cuenta;
     }
 
-    public List<Comanda> getComandas() {
-        return comandas;
-    }
-
-    public void setComandas(List<Comanda> comandas) {
-        this.comandas = comandas;
-    }
-
-
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -116,9 +105,5 @@ public class Mesa {
                 ", tiempo=" + tiempo +
                 ", cuenta=" + cuenta +
                 '}';
-    }
-
-    public void agregarComanda(Comanda comanda) {
-        comandas.add(comanda);
     }
 }
