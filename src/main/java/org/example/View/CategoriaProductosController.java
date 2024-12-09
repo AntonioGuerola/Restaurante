@@ -8,11 +8,9 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.ComandaDAO;
+import org.example.Model.DAO.CuentaDAO;
 import org.example.Model.DAO.MesaDAO;
-import org.example.Model.Entity.Comanda;
-import org.example.Model.Entity.Mesa;
-import org.example.Model.Entity.TipoMesa;
-import org.example.Model.Entity.TipoProducto;
+import org.example.Model.Entity.*;
 import org.example.Model.Singleton.ComandaSingleton;
 import org.example.Model.Singleton.MesaSingleton;
 
@@ -87,12 +85,22 @@ public class CategoriaProductosController extends Controller implements Initiali
                     // No hay comandas para esta mesa
                     tiempoLabel.setText("Tiempo: 0 mins");
                 }
+
+                CuentaDAO cuentaDAO = new CuentaDAO();
+                Cuenta cuenta = cuentaDAO.findByMesaId(mesaId);
+
+                if (cuenta != null) {
+                    cuentaLabel.setText("Cuenta: " + cuenta.getSumaTotal() + "€");
+                } else {
+                    cuentaLabel.setText("Cuenta: 0.0€");
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
                 tiempoLabel.setText("Tiempo: Error");
+                cuentaLabel.setText("Cuenta: Error");
             }
 
-            cuentaLabel.setText("Cuenta: $" + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00"));
+            cuentaLabel.setText("Cuenta: " + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00") + "€");
         }
 
         // Generar los botones para las categorías en el TilePane
@@ -231,7 +239,7 @@ public class CategoriaProductosController extends Controller implements Initiali
 
     @FXML
     private void goToCobrar() throws IOException {
-        App.currentController.changeScene(Scenes.CONFIRMARCOMANDA, null);
+        App.currentController.changeScene(Scenes.SHOWCUENTA, null);
 
     }
 }

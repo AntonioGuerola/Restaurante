@@ -1,5 +1,8 @@
 package org.example.Model.Entity;
 
+import org.example.Model.DAO.MesaDAO;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,8 +20,8 @@ public class Cuenta {
         this.comandas = new ArrayList<>();
     }
 
-    public Cuenta(){
-
+    public Cuenta() {
+        this.comandas = new ArrayList<>(); // Inicialización en el constructor sin parámetros
     }
 
     public int getId() {
@@ -30,7 +33,15 @@ public class Cuenta {
     }
 
     public Mesa getMesa() {
-        return mesa;
+        if (this.mesa == null) {
+            try {
+                MesaDAO mesaDAO = new MesaDAO();
+                this.mesa = mesaDAO.findById(this.mesa.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return this.mesa;
     }
 
     public void setMesa(Mesa mesa) {
@@ -60,6 +71,11 @@ public class Cuenta {
             }
         }
         this.sumaTotal = total;
+
+        // Actualizar el atributo cuenta de la mesa asociada
+        if (this.mesa != null) {
+            this.mesa.setCuenta(this);
+        }
     }
 
     public String getHoraCobro() {
@@ -71,11 +87,14 @@ public class Cuenta {
     }
 
     public List<Comanda> getComandas() {
+        if (comandas == null) {
+            comandas = new ArrayList<>(); // Garantiza que no sea null
+        }
         return comandas;
     }
 
     public void setComandas(List<Comanda> comandas) {
-        this.comandas = comandas;
+        this.comandas = comandas != null ? comandas : new ArrayList<>(); // Si el parámetro es null, inicializa como nueva lista
     }
 
     @Override
@@ -106,7 +125,7 @@ public class Cuenta {
         if (this.comandas == null) {
             this.comandas = new ArrayList<>();
         }
-        this.comandas.add(comanda);
+        this.comandas.add(comanda); // Añadir la comanda a la lista
 
         // Sumar el total de la nueva comanda a la sumaTotal existente
         if (comanda.getProductos() != null) {
@@ -119,6 +138,10 @@ public class Cuenta {
             }
             this.sumaTotal += totalNuevaComanda; // Incrementar el total
         }
-    }
 
+        // Actualizar el atributo cuenta de la mesa asociada
+        if (this.mesa != null) {
+            this.mesa.setCuenta(this);
+        }
+    }
 }

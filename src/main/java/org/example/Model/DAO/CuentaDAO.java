@@ -1,10 +1,7 @@
 package org.example.Model.DAO;
 
 import org.example.Model.Connection.MySQLConnection;
-import org.example.Model.Entity.Comanda;
-import org.example.Model.Entity.Cuenta;
-import org.example.Model.Entity.Mesa;
-import org.example.Model.Entity.TipoMesa;
+import org.example.Model.Entity.*;
 import org.example.View.Controller;
 
 import java.io.IOException;
@@ -72,12 +69,39 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
                 ps.setInt(1, id);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return mapResultSetToCuenta(rs);
+                        Cuenta cuenta = mapResultSetToCuenta(rs);
+
+                        // Rellenar la lista de comandas asociadas
+                        List<Comanda> comandas = findComandasByCuentaId(cuenta.getId());
+                        cuenta.setComandas(comandas);
+
+                        return cuenta;
                     }
                 }
             }
         }
         return null;
+    }
+
+    private List<Comanda> findComandasByCuentaId(int cuentaId) throws SQLException {
+        List<Comanda> comandas = new ArrayList<>();
+        if (con != null) {
+            String query = "SELECT * FROM comanda WHERE idCuenta = ?";
+            try (PreparedStatement ps = con.prepareStatement(query)) {
+                ps.setInt(1, cuentaId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        Comanda comanda = new Comanda();
+                        comanda.setId(rs.getInt("id"));
+                        comanda.setHoraComanda(rs.getString("horaComanda"));
+                        comanda.setEstadoComanda(EstadoComanda.valueOf(rs.getString("estado")));
+                        // Otros campos relevantes de la comanda
+                        comandas.add(comanda);
+                    }
+                }
+            }
+        }
+        return comandas;
     }
 
     @Override
@@ -103,11 +127,15 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
         Cuenta cuenta = new Cuenta();
         cuenta.setId(rs.getInt("id"));
 
-        MesaDAO mesaDAO = new MesaDAO();
-        Mesa mesa = mesaDAO.findById(rs.getInt("idMesa"));
-        cuenta.setMesa(mesa);
+        // Obtener el id de la mesa
+        int mesaId = rs.getInt("idMesa");
 
-        // Asignar el valor directamente desde la base de datos
+        // Crear un objeto MesaDAO para obtener la mesa completa
+        MesaDAO mesaDAO = new MesaDAO();
+        Mesa mesa = mesaDAO.findById(mesaId); // Obtener la mesa completa
+        cuenta.setMesa(mesa); // Asignar la mesa completa a la cuenta
+
+        // Asignar el valor de la sumaTotal directamente desde la base de datos
         cuenta.setSumaTotal(rs.getDouble("sumaTotal"));
 
         // Verificar si "horaCobro" es null antes de convertirlo
@@ -117,8 +145,10 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
         } else {
             cuenta.setHoraCobro(""); // Asignar valor vacío si es null
         }
+
         return cuenta;
     }
+
 
 
     public Cuenta findByMesaId(int mesaId) throws SQLException {
@@ -127,7 +157,12 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
                 ps.setInt(1, mesaId);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return mapResultSetToCuenta(rs); // Reutilizamos el método que mapea el ResultSet a una cuenta
+                        Cuenta cuenta = mapResultSetToCuenta(rs);
+
+                        List<Comanda> comandas = findComandasByCuentaId(cuenta.getId());
+                        cuenta.setComandas(comandas);
+
+                        return cuenta;
                     }
                 }
             }
