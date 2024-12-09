@@ -24,6 +24,7 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
     private static final String FINDCOMANDAABIERTA = "SELECT * FROM comanda WHERE idMesa = ? AND estado = 'ABIERTA'";
     private static final String UPDATEESTADO = "UPDATE comanda SET estado = ? WHERE id = ?";
     private static final String UPDATEHORACOMANDA = "UPDATE comanda SET horaComanda = ? WHERE id = ?";
+    private static final String UPDATEIDCUENTA = "UPDATE comanda SET idCuenta = ? WHERE id = ?";
 
     private Connection con;
 
@@ -245,6 +246,16 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
             ps.setString(1, horaActual);
             ps.setInt(2, idComanda);
             ps.executeUpdate();
+        }
+    }
+
+    public void asociarConCuenta(int comandaId, int cuentaId) throws SQLException {
+        if (con != null) {
+            try (PreparedStatement ps = con.prepareStatement(UPDATEIDCUENTA)) {
+                ps.setInt(1, cuentaId);
+                ps.setInt(2, comandaId);
+                ps.executeUpdate();
+            }
         }
     }
 }

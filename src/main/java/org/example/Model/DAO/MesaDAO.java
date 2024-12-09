@@ -1,6 +1,7 @@
 package org.example.Model.DAO;
 
 import org.example.Model.Connection.MySQLConnection;
+import org.example.Model.Entity.Cuenta;
 import org.example.Model.Entity.Mesa;
 import org.example.Model.Entity.TipoMesa;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class MesaDAO implements DAO<Mesa, Integer> {
 
     private static final String INSERT = "INSERT INTO mesa (tipo, numMesa, fecha, tiempo, cuenta) VALUES (?,?,?,?,?)";
-    private static final String UPDATE = "UPDATE mesa SET horaMesa = ?, tiempo = ?, cuenta = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE mesa SET tiempo = ?, cuenta = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM mesa WHERE id = ?";
     private static final String FINDBYID = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE id = ?";
     private static final String FINDBYNUMMESA = "SELECT id, tipo, numMesa, fecha, horaMesa, tiempo, cuenta FROM mesa WHERE numMesa = ? AND tipo LIKE ?";
@@ -48,20 +49,18 @@ public class MesaDAO implements DAO<Mesa, Integer> {
                         }
                     }
                 }
-            } else {
-                if (con != null){
-                    try(PreparedStatement ps = con.prepareStatement(UPDATE)){
-                        ps.setTime(1, Time.valueOf(LocalTime.now()));
-                        ps.setInt(2, entity.getTiempo());
-                        ps.setDouble(3, entity.getCuenta() != null ? entity.getCuenta().getSumaTotal() : 0);
-
-                        ps.executeUpdate();
-                    }
-                }
+            }
+        } else {
+            try (PreparedStatement ps = con.prepareStatement(UPDATE)) {
+                ps.setInt(1, entity.getTiempo());
+                ps.setDouble(2, entity.getCuenta() != null ? entity.getCuenta().getSumaTotal() : 0);
+                ps.setInt(3, entity.getId());
+                ps.executeUpdate();
             }
         }
         return entity;
     }
+
 
     @Override
     public Mesa delete(Mesa entity) throws SQLException {
@@ -121,8 +120,12 @@ public class MesaDAO implements DAO<Mesa, Integer> {
         }
 
         mesa.setTiempo(rs.getInt("tiempo"));
+
+        mesa.setCuenta(null);
+
         return mesa;
     }
+
 
 
     public int contarMesasTerraza() throws SQLException {

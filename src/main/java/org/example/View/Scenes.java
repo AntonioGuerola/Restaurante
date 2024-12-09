@@ -23,7 +23,8 @@ public enum Scenes {
     VERDURA("View/verdura.fxml"),
     POSTRE("View/postre.fxml"),
     CONFIRMARCOMANDA("View/confirmarComanda.fxml"),
-    MODIFICARCOMANDA("View/modificarComanda.fxml");
+    MODIFICARCOMANDA("View/modificarComanda.fxml"),
+    SHOWCUENTA("View/showCuenta.fxml");
 
     private String url;
 

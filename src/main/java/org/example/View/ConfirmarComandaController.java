@@ -136,6 +136,7 @@ public class ConfirmarComandaController extends Controller implements Initializa
         // Crear una nueva cuenta o actualizar la existente
         CuentaDAO cuentaDAO = new CuentaDAO();
         Cuenta nuevaCuenta = cuentaDAO.findByMesaId(mesa.getId()); // Buscar una cuenta existente para la mesa
+        System.out.println(nuevaCuenta);
 
         if (nuevaCuenta == null) {
             nuevaCuenta = new Cuenta(); // Crear nueva cuenta si no existe
@@ -146,6 +147,12 @@ public class ConfirmarComandaController extends Controller implements Initializa
         nuevaCuenta.addComanda(comanda);
 
         cuentaDAO.save(nuevaCuenta);
+
+        mesa.setCuenta(nuevaCuenta);
+
+        mesaDAO.save(mesa);
+
+        comandaDAO.asociarConCuenta(comanda.getId(), nuevaCuenta.getId());
 
         // Limpiar la sesión actual de comanda
         ComandaSingleton.closeSession();

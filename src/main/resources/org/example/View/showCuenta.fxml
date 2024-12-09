@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.View.ShowCuentaController">
+    <VBox layoutX="20.0" layoutY="20.0" spacing="15.0" style="-fx-padding: 10; -fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-radius: 5;">
+        <Label fx:id="numMesaLabel" text="Número de Mesa: [NumMesa]" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+        <Label fx:id="tipoMesaLabel" text="Tipo de Mesa: [TipoMesa]" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+        <Label fx:id="tiempoLabel" text="Tiempo: [Tiempo]" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+        <Label fx:id="sumaTotalLabel" text="Total: [SumaTotal]" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+    </VBox>
+
+    <!-- Contenedor para los productos (ScrollPane) -->
+    <ScrollPane layoutX="225.0" layoutY="167.0" prefHeight="300.0" prefWidth="450.0" style="-fx-background: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+        <TilePane fx:id="tilePane" prefColumns="1" hgap="10.0" vgap="10.0" alignment="CENTER">
+        </TilePane>
+    </ScrollPane>
+
+    <!-- Contenedor para los botones -->
+    <HBox layoutY="480.0" prefWidth="900.0" spacing="20.0" alignment="CENTER" style="-fx-padding: 10;">
+        <Button fx:id="btnCobrar" onAction="#cobrarCuenta" text="Cobrar" prefWidth="150.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
+        <Button fx:id="btnVolver" onAction="#goBack" text="Volver" prefWidth="150.0" style="-fx-font-weight: bold; -fx-background-radius: 5;" />
+    </HBox>
+</AnchorPane>

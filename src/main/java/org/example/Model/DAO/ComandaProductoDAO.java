@@ -122,10 +122,10 @@ public class ComandaProductoDAO implements DAO<ComandaProducto, Integer> {
                         ComandaProducto comandaProducto = new ComandaProducto(comanda, cantidad, producto, producto);
                         comandaProductos.add(comandaProducto);
                     }
+                } catch (SQLException e) {
+                    System.err.println("Error al buscar productos de la comanda: " + e.getMessage());
+                    throw e;
                 }
-            } catch (SQLException e) {
-                System.err.println("Error al buscar productos de la comanda: " + e.getMessage());
-                throw e;
             }
         }
         return comandaProductos;

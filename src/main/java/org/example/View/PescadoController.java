@@ -9,11 +9,9 @@ import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.Model.DAO.ComandaDAO;
 import org.example.Model.DAO.ComandaProductoDAO;
+import org.example.Model.DAO.CuentaDAO;
 import org.example.Model.DAO.ProductoDAO;
-import org.example.Model.Entity.Comanda;
-import org.example.Model.Entity.ComandaProducto;
-import org.example.Model.Entity.Mesa;
-import org.example.Model.Entity.Producto;
+import org.example.Model.Entity.*;
 import org.example.Model.Singleton.ComandaSingleton;
 import org.example.Model.Singleton.MesaSingleton;
 
@@ -81,11 +79,21 @@ public class PescadoController extends Controller implements Initializable {
                     tiempoLabel.setText("Tiempo: 0 mins");
                 }
 
+                CuentaDAO cuentaDAO = new CuentaDAO();
+                Cuenta cuenta = cuentaDAO.findByMesaId(mesaId);
+
+                if (cuenta != null) {
+                    cuentaLabel.setText("Cuenta: " + cuenta.getSumaTotal() + "€");
+                } else {
+                    cuentaLabel.setText("Cuenta: 0.0€");
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
                 tiempoLabel.setText("Tiempo: Error");
+                cuentaLabel.setText("Cuenta: Error");
             }
-            cuentaLabel.setText("Cuenta: $" + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00"));
+
+            cuentaLabel.setText("Cuenta: " + (mesaSeleccionada.getCuenta() != null ? mesaSeleccionada.getCuenta().getSumaTotal() : "0.00") + "€");
         }
 
         try {
