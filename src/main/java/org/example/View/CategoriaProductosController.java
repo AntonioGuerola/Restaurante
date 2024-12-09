@@ -13,6 +13,7 @@ import org.example.Model.DAO.MesaDAO;
 import org.example.Model.Entity.*;
 import org.example.Model.Singleton.ComandaSingleton;
 import org.example.Model.Singleton.MesaSingleton;
+import org.example.Model.Utils.JavaFXUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -234,12 +235,30 @@ public class CategoriaProductosController extends Controller implements Initiali
 
     @FXML
     private void enviarComanda() throws IOException {
+        // Verificar si la instancia del Singleton es válida
+        ComandaSingleton comandaSingleton = ComandaSingleton.getInstance();
+        if (comandaSingleton == null) {
+            JavaFXUtils.showErrorAlert("Error", "El sistema no pudo procesar la comanda. Intente reiniciar la aplicación.");
+            return;
+        }
+
+        // Verificar si hay una comanda activa
+        if (comandaSingleton.getCurrentComanda() == null) {
+            JavaFXUtils.showErrorAlert("Error", "Debes de incluir algún producto en la comanda antes de poder enviarla.");
+            return;
+        }
+
+        // Proceder con el cambio de escena
         App.currentController.changeScene(Scenes.CONFIRMARCOMANDA, null);
     }
 
     @FXML
-    private void goToCobrar() throws IOException {
+    private void goToCobrar() throws IOException {    Mesa mesaSeleccionada = MesaSingleton.getInstance().getCurrentMesa();
+        if (mesaSeleccionada == null || mesaSeleccionada.getCuenta() == null) {
+            // Mostrar una alerta de error si no hay una cuenta
+            JavaFXUtils.showErrorAlert("Error", "Debes de enviar una comanda y crear la cuenta antes de poder cobrarla.");
+            return; // Salir del método para evitar cambiar de escena
+        }
         App.currentController.changeScene(Scenes.SHOWCUENTA, null);
-
     }
 }
