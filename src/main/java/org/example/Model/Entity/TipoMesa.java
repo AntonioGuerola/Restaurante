@@ -1,6 +1,12 @@
 package org.example.Model.Entity;
 
-public enum TipoMesa {
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public enum TipoMesa implements Serializable {
     TERRAZA("terraza"),
     CAFETERIA("cafeteria");
 
@@ -10,6 +16,7 @@ public enum TipoMesa {
         this.dbField = url;
     }
 
+    @XmlElement
     public String getUrl() {
         return dbField;
     }

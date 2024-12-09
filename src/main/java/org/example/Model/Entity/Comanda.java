@@ -1,10 +1,15 @@
 package org.example.Model.Entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Comanda {
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Comanda implements Serializable {
     private int id;
     private String horaComanda;
     private Mesa mesa;
@@ -22,6 +27,7 @@ public class Comanda {
         this.productos = new ArrayList<>();
     }
 
+    @XmlElement
     public int getId() {
         return id;
     }
@@ -30,6 +36,7 @@ public class Comanda {
         this.id = id;
     }
 
+    @XmlElement
     public String getHoraComanda() {
         return horaComanda;
     }
@@ -38,6 +45,7 @@ public class Comanda {
         this.horaComanda = horaComanda;
     }
 
+    @XmlElement
     public Mesa getMesa() {
         return mesa;
     }
@@ -46,6 +54,7 @@ public class Comanda {
         this.mesa = mesa;
     }
 
+    @XmlElement
     public List<ProductoCantidad> getProductos() {
         return productos;
     }
@@ -54,6 +63,7 @@ public class Comanda {
         this.productos = productos;
     }
 
+    @XmlElement
     public EstadoComanda getEstadoComanda() {
         return estadoComanda;
     }
@@ -111,10 +121,12 @@ public class Comanda {
 
         }
 
+        @XmlElement
         public Producto getProducto() {
             return producto;
         }
 
+        @XmlElement
         public int getCantidad() {
             return cantidad;
         }

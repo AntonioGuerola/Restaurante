@@ -2,12 +2,18 @@ package org.example.Model.Entity;
 
 import org.example.Model.DAO.MesaDAO;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Cuenta {
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlRootElement
+public class Cuenta implements Serializable {
     private int id;
     private Mesa mesa;
     private double sumaTotal;
@@ -24,6 +30,7 @@ public class Cuenta {
         this.comandas = new ArrayList<>(); // Inicialización en el constructor sin parámetros
     }
 
+    @XmlElement
     public int getId() {
         return id;
     }
@@ -32,6 +39,7 @@ public class Cuenta {
         this.id = id;
     }
 
+    @XmlTransient
     public Mesa getMesa() {
         if (this.mesa == null) {
             try {
@@ -48,6 +56,7 @@ public class Cuenta {
         this.mesa = mesa;
     }
 
+    @XmlElement
     public double getSumaTotal() {
         return sumaTotal;
     }
@@ -78,6 +87,7 @@ public class Cuenta {
         }
     }
 
+    @XmlElement
     public String getHoraCobro() {
         return horaCobro;
     }
@@ -86,6 +96,7 @@ public class Cuenta {
         this.horaCobro = horaCobro;
     }
 
+    @XmlElement
     public List<Comanda> getComandas() {
         if (comandas == null) {
             comandas = new ArrayList<>(); // Garantiza que no sea null
