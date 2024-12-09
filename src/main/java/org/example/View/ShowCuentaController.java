@@ -8,6 +8,7 @@ import javafx.scene.layout.TilePane;
 import org.example.App;
 import org.example.Model.DAO.ComandaProductoDAO;
 import org.example.Model.DAO.CuentaDAO;
+import org.example.Model.DAO.MesaDAO;
 import org.example.Model.Entity.Comanda;
 import org.example.Model.Entity.ComandaProducto;
 import org.example.Model.Entity.Cuenta;
@@ -17,7 +18,11 @@ import org.example.Model.Singleton.MesaSingleton;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.*;
+
+import static org.example.Model.Utils.JavaFXUtils.getCurrentFormattedTime;
 
 public class ShowCuentaController extends Controller implements Initializable {
 
@@ -113,8 +118,26 @@ public class ShowCuentaController extends Controller implements Initializable {
 
 
     @FXML
-    private void cobrarCuenta() throws IOException {
-        System.out.println(cuentaActual.getComandas());
+    private void cobrarCuenta() throws IOException, SQLException {
+        MesaDAO mesaDAO = new MesaDAO();
+        Cuenta cuenta = mesaSeleccionada.getCuenta();
+        String horaActual = getCurrentFormattedTime();
+
+        if (cuenta.getHoraCobro() == null || cuenta.getHoraCobro().isEmpty()) {
+            cuentaDAO.actualizarHoraCobro(cuenta.getId(), horaActual); // Solo actualizar si está a null
+        }
+
+        String horaMesa = mesaSeleccionada.getHoraMesa();
+        LocalTime horaMesaLocalTime = LocalTime.parse(horaMesa);
+        LocalTime horaActualLocalTime = LocalTime.now();
+
+        Duration diferencia = Duration.between(horaMesaLocalTime, horaActualLocalTime);
+
+        int minutosTotales = (int) diferencia.toMinutes();
+        if (mesaSeleccionada.getTiempo() == 0) {
+            mesaDAO.actualizarTiempo(mesaSeleccionada.getId(), minutosTotales);
+            System.out.println("El tiempo se ha seteado a " + minutosTotales + " minutos.");
+        }
     }
 
     @FXML

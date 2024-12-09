@@ -18,6 +18,7 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
     private static final String FINDBYID = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta WHERE id = ?";
     private static final String FINDALL = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta";
     private static final String FINDBYMESAID = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta WHERE idMesa = ?";
+    private static final String UPDATEHORACUENTA = "UPDATE cuenta SET horaCobro = ? WHERE id = ?";
 
     private final Connection con;
     public CuentaDAO(){this.con = MySQLConnection.getConnection();}
@@ -149,8 +150,6 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
         return cuenta;
     }
 
-
-
     public Cuenta findByMesaId(int mesaId) throws SQLException {
         if (con != null) {
             try (PreparedStatement ps = con.prepareStatement(FINDBYMESAID)) {
@@ -168,5 +167,13 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
             }
         }
         return null; // Si no se encuentra una cuenta asociada a la mesa
+    }
+
+    public void actualizarHoraCobro(int idCuenta, String horaActual) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(UPDATEHORACUENTA)) {
+            ps.setString(1, horaActual);
+            ps.setInt(2, idCuenta);
+            ps.executeUpdate();
+        }
     }
 }

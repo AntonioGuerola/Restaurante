@@ -24,6 +24,7 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     private static final String CANTIDADTERRAZA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'TERRAZA'";
     private static final String CANTIDADCAFETERIA = "SELECT COUNT(*) FROM mesa WHERE tipo = 'CAFETERIA'";
     private static final String UPDATEHORAMESA = "UPDATE mesa SET horaMesa = ? WHERE id = ?";
+    private static final String UPDATETIEMPO = "UPDATE mesa SET tiempo = ? WHERE id = ?";
 
     private final Connection con;
 
@@ -166,6 +167,14 @@ public class MesaDAO implements DAO<Mesa, Integer> {
     public void actualizarHoraMesa(int idMesa, String horaActual) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement(UPDATEHORAMESA)) {
             ps.setString(1, horaActual);
+            ps.setInt(2, idMesa);
+            ps.executeUpdate();
+        }
+    }
+
+    public void actualizarTiempo(int idMesa, int tiempo) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(UPDATETIEMPO)) {
+            ps.setInt(1, tiempo);
             ps.setInt(2, idMesa);
             ps.executeUpdate();
         }
