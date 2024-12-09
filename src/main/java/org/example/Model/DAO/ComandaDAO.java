@@ -25,6 +25,7 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
     private static final String UPDATEESTADO = "UPDATE comanda SET estado = ? WHERE id = ?";
     private static final String UPDATEHORACOMANDA = "UPDATE comanda SET horaComanda = ? WHERE id = ?";
     private static final String UPDATEIDCUENTA = "UPDATE comanda SET idCuenta = ? WHERE id = ?";
+    private static final String DELETEBYID = "DELETE FROM comanda WHERE IdMesa = ?";
 
     private Connection con;
 
@@ -256,6 +257,15 @@ public class ComandaDAO implements DAO<Comanda, Integer> {
                 ps.setInt(2, comandaId);
                 ps.executeUpdate();
             }
+        }
+    }
+
+    public void deleteByMesaId(int idMesa) throws SQLException {
+        try (PreparedStatement statement = con.prepareStatement(DELETEBYID)) {
+            statement.setInt(1, idMesa);  // Establecer el ID de la mesa en la consulta
+            statement.executeUpdate();  // Ejecutar la consulta
+        } catch (SQLException e) {
+            throw new SQLException("Error al eliminar las comandas asociadas a la mesa con ID: " + idMesa, e);
         }
     }
 }

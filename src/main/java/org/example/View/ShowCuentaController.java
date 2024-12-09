@@ -6,13 +6,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import org.example.App;
+import org.example.Model.DAO.ComandaDAO;
 import org.example.Model.DAO.ComandaProductoDAO;
 import org.example.Model.DAO.CuentaDAO;
 import org.example.Model.DAO.MesaDAO;
-import org.example.Model.Entity.Comanda;
-import org.example.Model.Entity.ComandaProducto;
-import org.example.Model.Entity.Cuenta;
-import org.example.Model.Entity.Mesa;
+import org.example.Model.Entity.*;
 import org.example.Model.Singleton.MesaSingleton;
 import org.example.Model.Utils.Serializator;
 import org.example.Model.Utils.XMLSerializator;
@@ -22,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -152,6 +151,10 @@ public class ShowCuentaController extends Controller implements Initializable {
         } catch (JAXBException e) {
             System.err.println("Error al serializar la mesa y la cuenta a XML: " + e.getMessage());
         }
+
+        recrearMesa();
+
+        App.currentController.changeScene(Scenes.INICIO, null);
     }
 
     @FXML
@@ -167,5 +170,41 @@ public class ShowCuentaController extends Controller implements Initializable {
     @Override
     public void onClose(Object output) {
 
+    }
+
+    private void recrearMesa() throws SQLException {
+        // Obtener el tipo y número de la mesa seleccionada
+        TipoMesa tipoMesa = mesaSeleccionada.getTipo();
+        int numMesa = mesaSeleccionada.getNumMesa();
+
+        // Crear un objeto MesaDAO para eliminar la mesa
+        MesaDAO mesaDAO = new MesaDAO();
+        CuentaDAO cuentaDAO = new CuentaDAO();
+        ComandaDAO comandaDAO = new ComandaDAO();
+
+        // Eliminar las comandas asociadas a la mesa
+        comandaDAO.deleteByMesaId(mesaSeleccionada.getId());
+        System.out.println("Comandas eliminadas asociadas a la mesa ID: " + mesaSeleccionada.getId());
+
+        // Eliminar la cuenta asociada a la mesa
+        cuentaDAO.deleteByMesaId(mesaSeleccionada.getId());
+        System.out.println("Cuenta eliminada asociada a la mesa ID: " + mesaSeleccionada.getId());
+
+        // Eliminar la mesa que ya ha sido cobrada
+        mesaDAO.delete(mesaSeleccionada);  // Elimina la mesa de la base de datos
+        System.out.println("Mesa eliminada con ID: " + mesaSeleccionada.getId());
+
+        // Crear una nueva mesa con los mismos parámetros
+        Mesa nuevaMesa = new Mesa();
+        nuevaMesa.setTipo(tipoMesa);
+        nuevaMesa.setNumMesa(numMesa);
+        nuevaMesa.setFecha(LocalDate.now().toString());  // Usamos la fecha actual
+        nuevaMesa.setHoraMesa("");  // La hora es NULL (vacío)
+        nuevaMesa.setTiempo(0);  // Tiempo en 0
+        nuevaMesa.setCuenta(null);  // Cuenta en 0.00
+
+        // Guardar la nueva mesa en la base de datos
+        mesaDAO.save(nuevaMesa);  // Esto insertará la nueva mesa con un nuevo ID
+        System.out.println("Mesa recreada con ID: " + nuevaMesa.getId());
     }
 }

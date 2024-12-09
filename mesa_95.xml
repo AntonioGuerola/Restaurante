@@ -11,7 +11,7 @@
             <horaComanda>19:42:47</horaComanda>
             <id>120</id>
         </comandas>
-        <horaCobro>23:26:31</horaCobro>
+        <horaCobro>23:52:37</horaCobro>
         <id>18</id>
         <sumaTotal>43.5</sumaTotal>
     </cuenta>
@@ -19,6 +19,6 @@
     <horaMesa>19:42:26</horaMesa>
     <id>95</id>
     <numMesa>3</numMesa>
-    <tiempo>224</tiempo>
+    <tiempo>250</tiempo>
     <tipo>TERRAZA</tipo>
 </mesa>

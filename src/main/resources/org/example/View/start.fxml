@@ -10,7 +10,6 @@
             <children>
                 <Button mnemonicParsing="false" onAction="#toInicio" text="Comenzar" />
                 <Button mnemonicParsing="false" onAction="#toCuantasTerrazasCafeterias" text="Generar mesas" />
-                <Button mnemonicParsing="false" text="Registro" />
                 <Button mnemonicParsing="false" onAction="#toAjustes" text="Ajustes" />
                 <Button mnemonicParsing="false" onAction="#close" text="Cerrar" />
             </children>
