@@ -2,13 +2,19 @@ package org.example.Model.Entity;
 
 import org.example.Model.DAO.CuentaDAO;
 
+import java.io.Serializable;
+
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-public class Mesa {
+@XmlRootElement
+public class Mesa implements Serializable {
     private int id;
     private TipoMesa tipo;
     private int numMesa;
@@ -29,6 +35,7 @@ public class Mesa {
 
     }
 
+    @XmlElement
     public int getId() {
         return id;
     }
@@ -37,6 +44,7 @@ public class Mesa {
         this.id = id;
     }
 
+    @XmlElement
     public TipoMesa getTipo() {
         return tipo;
     }
@@ -45,6 +53,7 @@ public class Mesa {
         this.tipo = tipo;
     }
 
+    @XmlElement
     public int getNumMesa() {
         return numMesa;
     }
@@ -53,6 +62,7 @@ public class Mesa {
         this.numMesa = numMesa;
     }
 
+    @XmlElement
     public String getFecha() {
         return fecha;
     }
@@ -61,6 +71,7 @@ public class Mesa {
         this.fecha = fecha;
     }
 
+    @XmlElement
     public String getHoraMesa() {
         return horaMesa;
     }
@@ -69,6 +80,7 @@ public class Mesa {
         this.horaMesa = horaMesa;
     }
 
+    @XmlElement
     public int getTiempo() {
         return tiempo;
     }
@@ -77,6 +89,7 @@ public class Mesa {
         this.tiempo = tiempo;
     }
 
+    @XmlElement
     public Cuenta getCuenta() {
         if (this.cuenta == null) {
             try {
@@ -88,6 +101,7 @@ public class Mesa {
         }
         return this.cuenta;
     }
+
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
     }

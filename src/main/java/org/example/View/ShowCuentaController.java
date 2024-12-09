@@ -14,7 +14,10 @@ import org.example.Model.Entity.ComandaProducto;
 import org.example.Model.Entity.Cuenta;
 import org.example.Model.Entity.Mesa;
 import org.example.Model.Singleton.MesaSingleton;
+import org.example.Model.Utils.Serializator;
+import org.example.Model.Utils.XMLSerializator;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -137,6 +140,17 @@ public class ShowCuentaController extends Controller implements Initializable {
         if (mesaSeleccionada.getTiempo() == 0) {
             mesaDAO.actualizarTiempo(mesaSeleccionada.getId(), minutosTotales);
             System.out.println("El tiempo se ha seteado a " + minutosTotales + " minutos.");
+        }
+
+        Mesa mesaASerializar = mesaDAO.findById(mesaSeleccionada.getId());
+
+        String xmlFilename = "mesa_" + mesaASerializar.getId() + ".xml";
+
+        try {
+            XMLSerializator.serializeObjectToXML(mesaASerializar, xmlFilename);
+            System.out.println("Mesa y cuenta serializadas en " + xmlFilename);
+        } catch (JAXBException e) {
+            System.err.println("Error al serializar la mesa y la cuenta a XML: " + e.getMessage());
         }
     }
 

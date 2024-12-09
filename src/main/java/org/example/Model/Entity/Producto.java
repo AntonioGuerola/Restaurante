@@ -1,8 +1,13 @@
 package org.example.Model.Entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Producto {
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Producto implements Serializable {
     private int id;
     private String nombre;
     private double precio;
@@ -20,6 +25,7 @@ public class Producto {
 
     }
 
+    @XmlElement
     public int getId() {
         return id;
     }
@@ -28,6 +34,7 @@ public class Producto {
         this.id = id;
     }
 
+    @XmlElement
     public String getNombre() {
         return nombre;
     }
@@ -36,6 +43,7 @@ public class Producto {
         this.nombre = nombre;
     }
 
+    @XmlElement
     public double getPrecio() {
         return precio;
     }
@@ -44,6 +52,7 @@ public class Producto {
         this.precio = precio;
     }
 
+    @XmlElement
     public TipoProducto getTipo() {
         return tipo;
     }
@@ -52,6 +61,7 @@ public class Producto {
         this.tipo = tipo;
     }
 
+    @XmlElement
     public String getDestino() {
         return destino;
     }

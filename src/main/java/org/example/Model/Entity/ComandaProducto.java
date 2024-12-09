@@ -1,8 +1,13 @@
 package org.example.Model.Entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ComandaProducto {
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class ComandaProducto implements Serializable {
     private Comanda comanda;
     private Producto producto;
     private int cantidad;
@@ -19,6 +24,7 @@ public class ComandaProducto {
         cantidad = 0;
     }
 
+    @XmlElement
     public Comanda getComanda() {
         return comanda;
     }
@@ -27,6 +33,7 @@ public class ComandaProducto {
         this.comanda = comanda;
     }
 
+    @XmlElement
     public Producto getProducto() {
         return producto;
     }
@@ -35,6 +42,7 @@ public class ComandaProducto {
         this.producto = producto;
     }
 
+    @XmlElement
     public int getCantidad() {
         return cantidad;
     }
@@ -43,6 +51,7 @@ public class ComandaProducto {
         this.cantidad = cantidad;
     }
 
+    @XmlElement
     public Producto getNombreProducto() {
         return nombreProducto;
     }

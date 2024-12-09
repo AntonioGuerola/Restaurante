@@ -1,6 +1,12 @@
 package org.example.Model.Entity;
 
-public enum EstadoComanda {
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public enum EstadoComanda implements Serializable {
     ABIERTA("abierta"),
     CERRADA("cerrada");
 
@@ -10,6 +16,7 @@ public enum EstadoComanda {
         this.dbField = url;
     }
 
+    @XmlElement
     public String getUrl() {
         return dbField;
     }

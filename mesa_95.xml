@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mesa>
+    <cuenta>
+        <comandas>
+            <estadoComanda>CERRADA</estadoComanda>
+            <horaComanda>19:42:26</horaComanda>
+            <id>119</id>
+        </comandas>
+        <comandas>
+            <estadoComanda>CERRADA</estadoComanda>
+            <horaComanda>19:42:47</horaComanda>
+            <id>120</id>
+        </comandas>
+        <horaCobro>23:26:31</horaCobro>
+        <id>18</id>
+        <sumaTotal>43.5</sumaTotal>
+    </cuenta>
+    <fecha>2024-12-05</fecha>
+    <horaMesa>19:42:26</horaMesa>
+    <id>95</id>
+    <numMesa>3</numMesa>
+    <tiempo>224</tiempo>
+    <tipo>TERRAZA</tipo>
+</mesa>
