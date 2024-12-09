@@ -1,5 +1,6 @@
 package org.example.Model.Entity;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +13,7 @@ public class Mesa {
     private String horaMesa;
     private int tiempo;
     private Cuenta cuenta;
+    private LocalTime horafinal;
 
     public Mesa(TipoMesa tipo, int numMesa, String fecha, String horaMesa) {
         this.tipo = tipo;
@@ -79,6 +81,14 @@ public class Mesa {
 
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
+    }
+
+    public LocalTime getHorafinal() {
+        return horafinal;
+    }
+
+    public void setHorafinal(LocalTime horafinal) {
+        this.horafinal = horafinal;
     }
 
     @Override

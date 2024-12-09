@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.example.App;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class JavaFXUtils {
@@ -17,5 +19,9 @@ public class JavaFXUtils {
         errorAlert.setHeaderText(title);
         errorAlert.setContentText(textAboutAlert);
         errorAlert.showAndWait();
+    }
+
+    public static String getCurrentFormattedTime() {
+        return LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 }

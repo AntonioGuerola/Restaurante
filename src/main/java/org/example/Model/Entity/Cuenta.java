@@ -42,6 +42,10 @@ public class Cuenta {
     }
 
     public void setSumaTotal(double sumaTotal) {
+        this.sumaTotal = sumaTotal; // Asignar directamente
+    }
+
+    public void setSumaTotal() {
         double total = 0.0;
         if (comandas != null && !comandas.isEmpty()) {
             for (Comanda comanda : comandas) {
@@ -57,7 +61,6 @@ public class Cuenta {
         }
         this.sumaTotal = total;
     }
-
 
     public String getHoraCobro() {
         return horaCobro;
@@ -98,4 +101,24 @@ public class Cuenta {
                 ", comandas=" + comandas +
                 '}';
     }
+
+    public void addComanda(Comanda comanda) {
+        if (this.comandas == null) {
+            this.comandas = new ArrayList<>();
+        }
+        this.comandas.add(comanda);
+
+        // Sumar el total de la nueva comanda a la sumaTotal existente
+        if (comanda.getProductos() != null) {
+            double totalNuevaComanda = 0.0;
+            for (Comanda.ProductoCantidad productoCantidad : comanda.getProductos()) {
+                Producto producto = productoCantidad.getProducto();
+                if (producto != null) {
+                    totalNuevaComanda += producto.getPrecio() * productoCantidad.getCantidad();
+                }
+            }
+            this.sumaTotal += totalNuevaComanda; // Incrementar el total
+        }
+    }
+
 }
