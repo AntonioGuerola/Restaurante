@@ -19,6 +19,7 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
     private static final String FINDALL = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta";
     private static final String FINDBYMESAID = "SELECT id, idMesa, sumaTotal, horaCobro FROM cuenta WHERE idMesa = ?";
     private static final String UPDATEHORACUENTA = "UPDATE cuenta SET horaCobro = ? WHERE id = ?";
+    private static final String DELETEBYID = "DELETE FROM cuenta WHERE IdMesa = ?";
 
     private final Connection con;
     public CuentaDAO(){this.con = MySQLConnection.getConnection();}
@@ -174,6 +175,15 @@ public class CuentaDAO implements DAO<Cuenta, Integer> {
             ps.setString(1, horaActual);
             ps.setInt(2, idCuenta);
             ps.executeUpdate();
+        }
+    }
+
+    public void deleteByMesaId(int idMesa) throws SQLException {
+        try (PreparedStatement statement = con.prepareStatement(DELETEBYID)) {
+            statement.setInt(1, idMesa);  // Establecer el ID de la mesa en la consulta
+            statement.executeUpdate();  // Ejecutar la consulta
+        } catch (SQLException e) {
+            throw new SQLException("Error al eliminar las comandas asociadas a la mesa con ID: " + idMesa, e);
         }
     }
 }
